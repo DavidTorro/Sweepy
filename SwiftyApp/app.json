@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "SwiftyApp",
+    "slug": "SwiftyApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/Swifty_Logo.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/Swifty_Logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/Swifty_Logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/images/Swifty_Logo.png"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+# Expo / React Native (SwiftyApp)
+SwiftyApp/.expo/
+SwiftyApp/dist/
+SwiftyApp/web-build/
+SwiftyApp/expo-env.d.ts
+SwiftyApp/.metro-health-check*
+SwiftyApp/.kotlin/
+SwiftyApp/android/
+SwiftyApp/ios/
+SwiftyApp/*.jks
+SwiftyApp/*.p8
+SwiftyApp/*.p12
+SwiftyApp/*.key
+SwiftyApp/*.mobileprovision
+
+# Docusaurus (Docs/Swifty-Docs)
+Docs/Swifty-Docs/.docusaurus/
+Docs/Swifty-Docs/build/
+Docs/Swifty-Docs/.cache/
+Docs/Swifty-Docs/node_modules/
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Repo-wide
+.DS_Store
+*.pem
+*.orig.*
+*.tsbuildinfo
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.env
+.env.*
+node_modules/
+.vscode/
+
+README.md
+Docs
