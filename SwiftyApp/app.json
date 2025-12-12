@@ -25,6 +25,10 @@
     },
     "web": {
       "favicon": "./assets/images/Swifty_Logo.png"
-    }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-router"
+    ]
   }
 }
