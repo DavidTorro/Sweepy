@@ -1,5 +1,5 @@
-import { TouchableOpacity, Text, StyleSheet, Image, View } from "react-native";
-import { COLORS, FONTS } from "../theme";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { COLORS, FONTS, SHADOWS, SIZES } from "../../utils/theme";
 
 interface GoogleButtonProps {
   onPress: () => void;
@@ -11,7 +11,7 @@ export default function SocialButton({ onPress }: GoogleButtonProps) {
       <View style={styles.content}>
 
         <Image
-          source={require("../../assets/social/google.webp")}
+          source={require("../../../assets/social/google.webp")}
           style={styles.icon}
         />
 
@@ -28,13 +28,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 999,
     justifyContent: "center",
-
-    // Sombra ligera estilo iOS
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 6,
-    elevation: 2,
+    ...SHADOWS.card,
   },
 
   content: {
@@ -52,7 +46,7 @@ const styles = StyleSheet.create({
 
   text: {
     fontFamily: FONTS.medium,
-    fontSize: 16,
+    fontSize: SIZES.medium,
     color: COLORS.text,
   },
 });

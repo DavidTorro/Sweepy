@@ -1,5 +1,5 @@
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { COLORS, FONTS } from "../theme";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { COLORS, FONTS, SHADOWS } from "../../utils/theme";
 
 interface ButtonProps {
   title: string;
@@ -16,6 +16,7 @@ export default function Button({
   variant = "primary",
   loading = false,
   disabled = false,
+  style,
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
@@ -26,12 +27,11 @@ export default function Button({
       ? styles.ghostButton
       : styles.primaryButton;
 
-  const textStyle =
-    variant === "outline"
-      ? styles.outlineText
-      : variant === "ghost"
-      ? styles.ghostText
-      : styles.primaryText;
+  const textStyle = {
+    primary: styles.primaryText,
+    outline: styles.outlineText,
+    ghost: styles.ghostText,
+  }[variant];
 
   return (
     <TouchableOpacity
@@ -59,13 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
-
-    // sombra ligera y elegante
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 6,
-    elevation: 2,
+    ...SHADOWS.card
   },
 
   /* --- VARIANTES DE BOTÓN --- */

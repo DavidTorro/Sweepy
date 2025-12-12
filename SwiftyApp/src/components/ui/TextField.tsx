@@ -1,11 +1,12 @@
-import { View, TextInput, StyleSheet, TouchableOpacity, TextInputProps } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS, FONTS } from "../theme";
+import { StyleSheet, TextInput, TextInputProps, TouchableOpacity, View } from "react-native";
+import { COLORS, FONTS, SIZES } from "../../utils/theme";
 
 interface Props extends TextInputProps {
   leftIcon?: string;               // nombre del icono Ionicons
   rightIcon?: string;              // nombre del icono Ionicons
   onRightIconPress?: () => void;   // acción al pulsar el icono derecho
+  error?: boolean;                 // si hay error
   style?: any;
 }
 
@@ -13,11 +14,12 @@ export default function TextField({
   leftIcon,
   rightIcon,
   onRightIconPress,
+  error = false,
   style,
   ...props
 }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, error && styles.errorBorder, style]}>
       
       {/* ICONO IZQUIERDO OPCIONAL */}
       {leftIcon && (
@@ -64,6 +66,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 50,
   },
+  errorBorder: {
+    borderColor: COLORS.error,
+  },
   leftIcon: {
     marginRight: 10,
   },
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: FONTS.regular,
-    fontSize: 16,
+    fontSize: SIZES.medium,
     color: COLORS.text,
   },
 });

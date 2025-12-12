@@ -1,3 +1,4 @@
+// ire cambiando los colores según vaya haciendo y probando combinaciones
 export const COLORS = {
   primary: "#00B8A9",             // Turquesa principal (botones, acentos)
   primaryLight: "#7BEADD",        // Versión clara para backgrounds
@@ -30,7 +31,6 @@ export const SIZES = {
   extraLarge: 28,
   radius: 12,
 };
-
 
 export const SHADOWS = {
   card: {
