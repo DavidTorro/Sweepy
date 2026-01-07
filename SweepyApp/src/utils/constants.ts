@@ -1,12 +1,14 @@
 export const APP = {
-  NAME: "Swifty",
-  SLOGAN: "Rápido, simple, Swifty.",
+  NAME: "Sweepy",
+  SLOGAN: "Rápido, simple, Sweepy.",
 };
 
 export const ROUTES = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   // FORGOT_PASSWORD: "/forgot",
+  ADMINLOGIN: "/admin/login",
+  ADMIN: "/admin/adminPortal",
 };
 
 export const ERRORS = {
@@ -16,4 +18,9 @@ export const ERRORS = {
   PASSWORD_MISMATCH: "Las contraseñas no coinciden",
   PASSWORD_REQUIRED: "La contraseña es obligatoria",
 };
+
+export const FILTERS = {
+  ROLES: ["Usuario", "Moderador", "Administrador"],
+  STATUS: ["Activo", "Inactivo", "Pendiente"],
+}
 

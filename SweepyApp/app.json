@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "SwiftyApp",
-    "slug": "SwiftyApp",
+    "name": "SweepyApp",
+    "slug": "SweepyApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Swifty_Logo.png",
+    "icon": "./assets/images/Sweepy_Logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/Swifty_Logo.png",
+      "image": "./assets/images/Sweepy_Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,14 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Swifty_Logo.png",
+        "foregroundImage": "./assets/images/Sweepy_Logo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/images/Swifty_Logo.png"
+      "favicon": "./assets/images/Sweepy_Logo.png"
     },
     "plugins": [
       "expo-font",

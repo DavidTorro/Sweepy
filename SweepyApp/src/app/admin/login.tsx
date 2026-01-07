@@ -1,57 +1,48 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-import SocialButton from "../../components/auth/SocialButton";
+import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "../../components/ui/Button";
-import Separator from "../../components/ui/Separator";
 import TextField from "../../components/ui/TextField";
+import { APP, ERRORS, ROUTES } from "../../utils/constants";
 import { COLORS, FONTS } from "../../utils/theme";
-import { ERRORS, ROUTES } from "../../utils/constants";
 
-export default function RegisterScreen() {
-  const [username, setUsername] = useState("");
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [forgotVisible, setForgotVisible] = useState(false);
 
-  const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // --- VALIDACIÓN ---
+  // TODO: validar que solo administradores puedan loguearse
   const validateAndRegister = () => {
     let isValid = true;
 
-    setUsernameError("");
     setEmailError("");
     setPasswordError("");
-
-    if (username.trim() === "") {
-      setUsernameError(ERRORS.USERNAME_REQUIRED);
-      isValid = false;
-    }
 
     if (email.trim() === "") {
       setEmailError(ERRORS.EMAIL_REQUIRED);
       isValid = false;
     }
 
-    if (password.length < 3) {
-      setPasswordError(ERRORS.PASSWORD_SHORT);
-      isValid = false;
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordError(ERRORS.PASSWORD_MISMATCH);
+    if (password.trim() === "") {
+      setPasswordError(ERRORS.PASSWORD_REQUIRED);
       isValid = false;
     }
 
     if (!isValid) return;
 
-    console.log("Usuario registrado con éxito:");
-    console.log("Usuario:", username);
+    // usuario para pruebas:
+    if (email === "sweepy" && password === "admin123") {
+      router.replace(ROUTES.ADMIN);
+      return;
+      //TODO ver guardar sesion
+    }
+
+    console.log("Admin logeado con éxito:");
     console.log("Email:", email);
   };
 
@@ -72,31 +63,19 @@ export default function RegisterScreen() {
         >
           {/* Logo */}
           <Image
-            source={require("../../../assets/images/Swifty_Letter.png")}
+            source={require("../../../assets/images/Sweepy_Admin_Letter.png")}
             style={styles.logo}
           />
 
           {/* Título */}
-          <Text style={styles.title}>Swifty</Text>
+          <Text style={styles.title}>{APP.NAME} Admin</Text>
           <Text style={styles.subtitle}>
-            Rellena los campos para crear una cuenta
+            Introduce tus credenciales para continuar
           </Text>
 
           {/* FORMULARIO */}
           <View style={styles.form}>
-            <Text style={styles.label}>Nombre de usuario</Text>
-
-            <TextField
-              placeholder="nombre de usuario"
-              value={username}
-              onChangeText={setUsername}
-              leftIcon="person-outline"
-              error={!!usernameError}
-            />
-
-            <Text style={[styles.label, { marginTop: 10 }]}>
-              Correo electrónico
-            </Text>
+            <Text style={styles.label}>Correo electrónico</Text>
 
             <TextField
               placeholder="nombre@ejemplo.com"
@@ -106,15 +85,12 @@ export default function RegisterScreen() {
               error={!!emailError}
             />
 
-            <Text style={[styles.label, { marginTop: 10 }]}>Contraseña</Text>
+            <Text style={[styles.label, { marginTop: 20 }]}>Contraseña</Text>
 
             <TextField
               placeholder="********"
               value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setPasswordError("");
-              }}
+              onChangeText={setPassword}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
               rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -122,28 +98,12 @@ export default function RegisterScreen() {
               error={!!passwordError}
             />
 
-            <Text style={[styles.label, { marginTop: 10 }]}>
-              Confirmar contraseña
+            {/* Olvidaste tu contraseña */}
+            <Text style={styles.forgot} onPress={() => setForgotVisible(true)}>
+              ¿Olvidaste tu contraseña?
             </Text>
 
-            <TextField
-              placeholder="********"
-              value={confirmPassword}
-              onChangeText={(text) => {
-                setConfirmPassword(text);
-                setPasswordError("");
-              }}
-              secureTextEntry={!showPassword}
-              leftIcon="lock-closed-outline"
-              rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
-              onRightIconPress={() => setShowPassword(!showPassword)}
-              error={!!passwordError}
-            />
-
             {/* MENSAJES DE ERROR */}
-            {usernameError !== "" && (
-              <Text style={styles.errorText}>{usernameError}</Text>
-            )}
             {emailError !== "" && (
               <Text style={styles.errorText}>{emailError}</Text>
             )}
@@ -151,30 +111,49 @@ export default function RegisterScreen() {
               <Text style={styles.errorText}>{passwordError}</Text>
             )}
 
-            {/* BOTÓN */}
+            {/* BOTÓN LOGIN */}
             <Button
-              title="Registrarse"
+              title="Iniciar sesión"
               variant="primary"
               onPress={() => {
                 validateAndRegister();
-                console.log("register");
+                console.log("login");
               }}
             />
           </View>
 
-          {/* Separador */}
-          <Separator text="O continúa con" />
+          {/* MODAL OLVIDAR CONTRASEÑA */}
+          <Modal
+            visible={forgotVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setForgotVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Recuperar contraseña</Text>
+                <Text style={styles.modalText}>
+                  Ponte en contacto con el soporte técnico para recuperar tu
+                  contraseña.
+                </Text>
 
-          {/* Botón Google */}
-          <SocialButton onPress={() => console.log("Google login")} />
+                {/* BOTONES DEL MODAL => TODO mirar de hacerlos en una misma linea los 2 */}
+                <Button
+                  title="Aceptar"
+                  variant="primary"
+                  onPress={() => setForgotVisible(false)}
+                />
 
-          {/* Ir a login */}
-          <Text style={styles.login}>
-            ¿Ya tienes una cuenta?{" "}
-            <Link href={ROUTES.LOGIN} style={styles.loginLink}>
-              Inicia sesión
-            </Link>
-          </Text>
+                <Button
+                  title="Cancelar"
+                  variant="outline"
+                  onPress={() => {
+                    setForgotVisible(false);
+                  }}
+                />
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -183,22 +162,24 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: "center",
     paddingTop: 120,
-    paddingBottom: 50,
   },
+
   logo: {
     width: 150,
     height: 150,
     resizeMode: "contain",
   },
+
   title: {
     fontFamily: FONTS.bold,
     fontSize: 40,
     color: COLORS.text,
     marginTop: 10,
   },
+
   subtitle: {
     fontFamily: FONTS.regular,
     fontSize: 14,
@@ -206,6 +187,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 30,
   },
+
   label: {
     textAlign: "left",
     fontFamily: FONTS.semibold,
@@ -214,23 +196,58 @@ const styles = StyleSheet.create({
     width: "85%",
     paddingBottom: 8,
   },
+
   form: {
     width: "100%",
     alignItems: "center",
   },
+
+  forgot: {
+    textAlign: "right",
+    fontFamily: FONTS.regular,
+    color: COLORS.text,
+    marginTop: 8,
+    width: "85%",
+  },
+
   errorText: {
     width: "85%",
     color: COLORS.error,
     marginTop: 8,
     fontFamily: FONTS.regular,
   },
-  login: {
-    marginTop: 20,
-    fontFamily: FONTS.regular,
-    color: COLORS.textSecondary,
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  loginLink: {
+
+  modalContainer: {
+    width: "85%",
+    backgroundColor: COLORS.card,
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 5,
+  },
+
+  modalTitle: {
+    fontFamily: FONTS.bold,
+    fontSize: 18,
     color: COLORS.text,
-    fontFamily: FONTS.semibold,
+    marginBottom: 10,
+  },
+
+  modalText: {
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    textAlign: "center",
   },
 });

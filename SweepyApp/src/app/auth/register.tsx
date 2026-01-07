@@ -1,43 +1,57 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import SocialButton from "../../components/auth/SocialButton";
 import Button from "../../components/ui/Button";
 import Separator from "../../components/ui/Separator";
 import TextField from "../../components/ui/TextField";
+import { APP, ERRORS, ROUTES } from "../../utils/constants";
 import { COLORS, FONTS } from "../../utils/theme";
-import { ERRORS, ROUTES } from "../../utils/constants";
-
-export default function LoginScreen() {
+  
+export default function RegisterScreen() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [forgotVisible, setForgotVisible] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  // --- VALIDACIÓN ---
   const validateAndRegister = () => {
     let isValid = true;
 
+    setUsernameError("");
     setEmailError("");
     setPasswordError("");
+
+    if (username.trim() === "") {
+      setUsernameError(ERRORS.USERNAME_REQUIRED);
+      isValid = false;
+    }
 
     if (email.trim() === "") {
       setEmailError(ERRORS.EMAIL_REQUIRED);
       isValid = false;
     }
 
-    if (password.trim() === "") {
-      setPasswordError(ERRORS.PASSWORD_REQUIRED);
+    if (password.length < 3) {
+      setPasswordError(ERRORS.PASSWORD_SHORT);
+      isValid = false;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordError(ERRORS.PASSWORD_MISMATCH);
       isValid = false;
     }
 
     if (!isValid) return;
 
-    console.log("Usuario logeado con éxito:");
+    console.log("Usuario registrado con éxito:");
+    console.log("Usuario:", username);
     console.log("Email:", email);
   };
 
@@ -58,19 +72,31 @@ export default function LoginScreen() {
         >
           {/* Logo */}
           <Image
-            source={require("../../../assets/images/Swifty_Letter.png")}
+            source={require("../../../assets/images/Sweepy_Letter.png")}
             style={styles.logo}
           />
 
           {/* Título */}
-          <Text style={styles.title}>Swifty</Text>
+          <Text style={styles.title}>{APP.NAME}</Text>
           <Text style={styles.subtitle}>
-            Introduce tus credenciales para continuar
+            Rellena los campos para crear una cuenta
           </Text>
 
           {/* FORMULARIO */}
           <View style={styles.form}>
-            <Text style={styles.label}>Correo electrónico</Text>
+            <Text style={styles.label}>Nombre de usuario</Text>
+
+            <TextField
+              placeholder="nombre de usuario"
+              value={username}
+              onChangeText={setUsername}
+              leftIcon="person-outline"
+              error={!!usernameError}
+            />
+
+            <Text style={[styles.label, { marginTop: 10 }]}>
+              Correo electrónico
+            </Text>
 
             <TextField
               placeholder="nombre@ejemplo.com"
@@ -80,12 +106,15 @@ export default function LoginScreen() {
               error={!!emailError}
             />
 
-            <Text style={[styles.label, { marginTop: 20 }]}>Contraseña</Text>
+            <Text style={[styles.label, { marginTop: 10 }]}>Contraseña</Text>
 
             <TextField
               placeholder="********"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setPassword(text);
+                setPasswordError("");
+              }}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
               rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -93,12 +122,28 @@ export default function LoginScreen() {
               error={!!passwordError}
             />
 
-            {/* Olvidaste tu contraseña */}
-            <Text style={styles.forgot} onPress={() => setForgotVisible(true)}>
-              ¿Olvidaste tu contraseña?
+            <Text style={[styles.label, { marginTop: 10 }]}>
+              Confirmar contraseña
             </Text>
 
+            <TextField
+              placeholder="********"
+              value={confirmPassword}
+              onChangeText={(text) => {
+                setConfirmPassword(text);
+                setPasswordError("");
+              }}
+              secureTextEntry={!showPassword}
+              leftIcon="lock-closed-outline"
+              rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
+              onRightIconPress={() => setShowPassword(!showPassword)}
+              error={!!passwordError}
+            />
+
             {/* MENSAJES DE ERROR */}
+            {usernameError !== "" && (
+              <Text style={styles.errorText}>{usernameError}</Text>
+            )}
             {emailError !== "" && (
               <Text style={styles.errorText}>{emailError}</Text>
             )}
@@ -106,13 +151,13 @@ export default function LoginScreen() {
               <Text style={styles.errorText}>{passwordError}</Text>
             )}
 
-            {/* BOTÓN LOGIN */}
+            {/* BOTÓN */}
             <Button
-              title="Iniciar sesión"
+              title="Registrarse"
               variant="primary"
               onPress={() => {
                 validateAndRegister();
-                console.log("login");
+                console.log("register");
               }}
             />
           </View>
@@ -123,66 +168,13 @@ export default function LoginScreen() {
           {/* Botón Google */}
           <SocialButton onPress={() => console.log("Google login")} />
 
-          {/* Registro */}
-          <Text style={styles.register}>
-            ¿No tienes una cuenta?{" "}
-            <Link
-              href={ROUTES.REGISTER}
-              style={styles.registerLink}
-            >
-              Regístrate
+          {/* Ir a login */}
+          <Text style={styles.login}>
+            ¿Ya tienes una cuenta?{" "}
+            <Link href={ROUTES.LOGIN} style={styles.loginLink}>
+              Inicia sesión
             </Link>
           </Text>
-
-          {/* MODAL OLVIDAR CONTRASEÑA */}
-          <Modal
-            visible={forgotVisible}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setForgotVisible(false)}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContainer}>
-                <Text style={styles.modalTitle}>Recuperar contraseña</Text>
-                <Text style={styles.modalText}>
-                  Te enviaremos un enlace para restablecer tu contraseña.
-                </Text>
-
-                <TextField
-                  placeholder="Tu correo electrónico"
-                  leftIcon="mail-outline"
-                  value={forgotEmail}
-                  onChangeText={setForgotEmail}
-                  style={{ width: "100%", marginTop: 10 }}
-                />
-
-                <Button
-                  title="Enviar enlace"
-                  variant="primary"
-                  onPress={() => {
-                    Alert.alert(
-                      "Enlace enviado",
-                      `Se ha enviado un correo de recuperación a ${forgotEmail}`
-                    );
-                    console.log(
-                      `Correo de recuperación enviado a: ${forgotEmail}`
-                    );
-                    setForgotEmail("");
-                    setForgotVisible(false);
-                  }}
-                />
-
-                <Button
-                  title="Cancelar"
-                  variant="outline"
-                  onPress={() => {
-                    setForgotEmail("");
-                    setForgotVisible(false);
-                  }}
-                />
-              </View>
-            </View>
-          </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -191,9 +183,10 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     paddingTop: 120,
+    paddingBottom: 50,
   },
   logo: {
     width: 150,
@@ -225,61 +218,19 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
   },
-  forgot: {
-    textAlign: "right",
-    fontFamily: FONTS.regular,
-    color: COLORS.text,
-    marginTop: 8,
-    width: "85%",
-  },
   errorText: {
     width: "85%",
     color: COLORS.error,
     marginTop: 8,
     fontFamily: FONTS.regular,
   },
-  register: {
+  login: {
     marginTop: 20,
     fontFamily: FONTS.regular,
     color: COLORS.textSecondary,
   },
-
-  registerLink: {
+  loginLink: {
     color: COLORS.text,
     fontFamily: FONTS.semibold,
-  },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalContainer: {
-    width: "85%",
-    backgroundColor: COLORS.card,
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 5,
-  },
-
-  modalTitle: {
-    fontFamily: FONTS.bold,
-    fontSize: 18,
-    color: COLORS.text,
-    marginBottom: 10,
-  },
-
-  modalText: {
-    fontFamily: FONTS.regular,
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: "center",
   },
 });

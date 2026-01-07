@@ -1,23 +1,23 @@
-# Expo / React Native (SwiftyApp)
-SwiftyApp/.expo/
-SwiftyApp/dist/
-SwiftyApp/web-build/
-SwiftyApp/expo-env.d.ts
-SwiftyApp/.metro-health-check*
-SwiftyApp/.kotlin/
-SwiftyApp/android/
-SwiftyApp/ios/
-SwiftyApp/*.jks
-SwiftyApp/*.p8
-SwiftyApp/*.p12
-SwiftyApp/*.key
-SwiftyApp/*.mobileprovision
+# Expo / React Native (SweepyApp)
+SweepyApp/.expo/
+SweepyApp/dist/
+SweepyApp/web-build/
+SweepyApp/expo-env.d.ts
+SweepyApp/.metro-health-check*
+SweepyApp/.kotlin/
+SweepyApp/android/
+SweepyApp/ios/
+SweepyApp/*.jks
+SweepyApp/*.p8
+SweepyApp/*.p12
+SweepyApp/*.key
+SweepyApp/*.mobileprovision
 
-# Docusaurus (Docs/Swifty-Docs)
-Docs/Swifty-Docs/.docusaurus/
-Docs/Swifty-Docs/build/
-Docs/Swifty-Docs/.cache/
-Docs/Swifty-Docs/node_modules/
+# Docusaurus (Docs/Sweepy-Docs)
+Docs/Sweepy-Docs/.docusaurus/
+Docs/Sweepy-Docs/build/
+Docs/Sweepy-Docs/.cache/
+Docs/Sweepy-Docs/node_modules/
 
 # Package managers
 package-lock.json
@@ -42,3 +42,4 @@ node_modules/
 README.md
 Docs
 entregas
+SwiftyApp/recursos_aules
