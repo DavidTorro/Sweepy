@@ -31,12 +31,16 @@ export default function AdminPortal() {
             rightIcon="filter-outline"
             onRightIconPress={() => setFilterVisible(true)}
           />
+          
           {/* Texto de ordenar por (por defecto de manera "ascendente", asi que al pulsar sera descendiente) */}
           <Text style={styles.ordenarText}>
             Ordenar por:{" "}
-              <Text style={styles.ordenarText} onPress={() => {setOrderASC(!orderASC)}}>
-                Nombre de usuario ▼
-              </Text>
+            <Text 
+              style={styles.ordenarText} 
+              onPress={() => {setOrderASC(!orderASC)}}
+            >
+              Nombre de usuario {orderASC ? "▼" : "▲"}
+            </Text>
           </Text>
           
         </View>

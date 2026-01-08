@@ -58,7 +58,7 @@ export default function LoginScreen() {
         >
           {/* Logo */}
           <Image
-            source={require("../../../assets/images/Sweepy_Letter.png")}
+            source={require("../../../assets/resources/Sweepy_Letter.png")}
             style={styles.logo}
           />
 

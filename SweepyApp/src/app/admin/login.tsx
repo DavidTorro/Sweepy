@@ -15,6 +15,7 @@ export default function LoginScreen() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   // TODO: validar que solo administradores puedan loguearse
   const validateAndRegister = () => {
@@ -22,6 +23,7 @@ export default function LoginScreen() {
 
     setEmailError("");
     setPasswordError("");
+    setLoginError("");
 
     if (email.trim() === "") {
       setEmailError(ERRORS.EMAIL_REQUIRED);
@@ -33,13 +35,22 @@ export default function LoginScreen() {
       isValid = false;
     }
 
-    if (!isValid) return;
+    if (password.length < 4) {
+      setPasswordError(ERRORS.PASSWORD_SHORT);
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    };
 
     // usuario para pruebas:
-    if (email === "sweepy" && password === "admin123") {
+    if (email === "Sweepy" && password === "admin123") {
       router.replace(ROUTES.ADMIN);
       return;
       //TODO ver guardar sesion
+    } else {
+      setLoginError(ERRORS.LOGIN_ERROR);
     }
 
     console.log("Admin logeado con éxito:");
@@ -63,7 +74,7 @@ export default function LoginScreen() {
         >
           {/* Logo */}
           <Image
-            source={require("../../../assets/images/Sweepy_Admin_Letter.png")}
+            source={require("../../../assets/resources/Sweepy_Admin_Letter.png")}
             style={styles.logo}
           />
 
@@ -109,6 +120,9 @@ export default function LoginScreen() {
             )}
             {passwordError !== "" && (
               <Text style={styles.errorText}>{passwordError}</Text>
+            )}
+            {loginError !== "" && (
+              <Text style={styles.errorText}>{loginError}</Text>
             )}
 
             {/* BOTÓN LOGIN */}
