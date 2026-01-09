@@ -13,15 +13,19 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Alert
 } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
-import { clientes } from "../../../entregas/recursos_aules/types";
+import { clientes, loadClientes, updateCliente, deleteCliente } from "../../../entregas/recursos_aules/types";
 
 export default function ClienteDetailScreen() {
   const { id } = useLocalSearchParams();
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [allClientes, setAllClientes] = useState<Cliente[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
     nifCif: "",
@@ -31,41 +35,123 @@ export default function ClienteDetailScreen() {
     activo: true,
   });
 
-  // Inicializar cliente
+  // Cargar cliente desde AsyncStorage
   useEffect(() => {
-    const foundCliente = clientes.find((c) => c.id === Number(id));
-    if (foundCliente) {
-      setCliente(foundCliente);
-      setFormData({
-        nombre: foundCliente.nombre,
-        nifCif: foundCliente.nifCif ?? "",
-        telefono: foundCliente.telefono ?? "",
-        email: foundCliente.email ?? "",
-        notas: foundCliente.notas ?? "",
-        activo: foundCliente.activo,
-      });
-    }
+    const loadCliente = async () => {
+      try {
+        const loadedClientes = await loadClientes();
+        setAllClientes(loadedClientes);
+        
+        const foundCliente = loadedClientes.find((c) => c.id === Number(id));
+        if (foundCliente) {
+          setCliente(foundCliente);
+          setFormData({
+            nombre: foundCliente.nombre,
+            nifCif: foundCliente.nifCif ?? "",
+            telefono: foundCliente.telefono ?? "",
+            email: foundCliente.email ?? "",
+            notas: foundCliente.notas ?? "",
+            activo: foundCliente.activo,
+          });
+        }
+      } catch (error) {
+        console.error('Error cargando cliente:', error);
+        // Fallback
+        const foundCliente = clientes.find((c) => c.id === Number(id));
+        if (foundCliente) {
+          setCliente(foundCliente);
+          setFormData({
+            nombre: foundCliente.nombre,
+            nifCif: foundCliente.nifCif ?? "",
+            telefono: foundCliente.telefono ?? "",
+            email: foundCliente.email ?? "",
+            notas: foundCliente.notas ?? "",
+            activo: foundCliente.activo,
+          });
+        }
+      }
+    };
+    loadCliente();
   }, [id]);
 
   const handleEditClose = () => {
     setEditModalVisible(false);
   };
 
-  const handleSaveChanges = () => {
-    // TODO: Guardar cambios en la base de datos
-    console.log("Guardando cambios:", formData);
-    if (cliente) {
-      setCliente({
-        ...cliente,
-        nombre: formData.nombre,
-        nifCif: formData.nifCif,
-        telefono: formData.telefono,
-        email: formData.email,
-        notas: formData.notas,
-        activo: formData.activo,
-      });
+  const handleSaveChanges = async () => {
+    if (!formData.nombre.trim()) {
+      Alert.alert("Error", "El nombre del cliente es obligatorio");
+      return;
     }
-    handleEditClose();
+
+    setIsSaving(true);
+    try {
+      if (!cliente) return;
+
+      const updated = await updateCliente(
+        cliente.id,
+        {
+          nombre: formData.nombre,
+          nifCif: formData.nifCif || undefined,
+          telefono: formData.telefono || undefined,
+          email: formData.email || undefined,
+          notas: formData.notas || undefined,
+          activo: formData.activo,
+        },
+        allClientes
+      );
+
+      setCliente(updated);
+      
+      // Recargar la lista de clientes
+      const loadedClientes = await loadClientes();
+      setAllClientes(loadedClientes);
+
+      handleEditClose();
+      Alert.alert("Éxito", "Cliente actualizado correctamente");
+    } catch (error) {
+      console.error("Error guardando cliente:", error);
+      Alert.alert("Error", "No se pudo guardar los cambios");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteCliente = () => {
+    if (!cliente) return;
+
+    Alert.alert(
+      "Confirmar eliminación",
+      `¿Está seguro de que desea eliminar a ${cliente.nombre}?`,
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: async () => {
+            setIsDeleting(true);
+            try {
+              await deleteCliente(cliente.id, allClientes);
+              Alert.alert("Éxito", "Cliente eliminado correctamente", [
+                {
+                  text: "OK",
+                  onPress: () => router.back(),
+                },
+              ]);
+            } catch (error) {
+              console.error("Error eliminando cliente:", error);
+              Alert.alert("Error", "No se pudo eliminar el cliente");
+            } finally {
+              setIsDeleting(false);
+            }
+          },
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   if (!cliente) {
@@ -164,12 +250,22 @@ export default function ClienteDetailScreen() {
             )}
           </View>
 
-          {/* BOTÓN EDITAR */}
+          {/* BOTONES */}
           <View style={styles.buttonContainer}>
             <Button
               title="Editar Cliente"
               variant="primary"
               onPress={() => setEditModalVisible(true)}
+            />
+          </View>
+
+          <View style={[styles.buttonContainer, { marginTop: 12 }]}>
+            <Button
+              title="Eliminar Cliente"
+              variant="primary"
+              onPress={handleDeleteCliente}
+              disabled={isDeleting}
+              style={{ backgroundColor: "#dc3232" }}
             />
           </View>
         </ScrollView>
@@ -240,6 +336,7 @@ export default function ClienteDetailScreen() {
                     onChangeText={(text) =>
                       setFormData((p) => ({ ...p, nombre: text }))
                     }
+                    style={{ width: "100%" }}
                   />
                 </View>
 
@@ -251,6 +348,7 @@ export default function ClienteDetailScreen() {
                     onChangeText={(text) =>
                       setFormData((p) => ({ ...p, nifCif: text }))
                     }
+                    style={{ width: "100%" }}
                   />
                 </View>
 
@@ -263,6 +361,7 @@ export default function ClienteDetailScreen() {
                       setFormData((p) => ({ ...p, telefono: text }))
                     }
                     keyboardType="phone-pad"
+                    style={{ width: "100%" }}
                   />
                 </View>
 
@@ -275,6 +374,7 @@ export default function ClienteDetailScreen() {
                       setFormData((p) => ({ ...p, email: text }))
                     }
                     keyboardType="email-address"
+                    style={{ width: "100%" }}
                   />
                 </View>
 
@@ -288,6 +388,7 @@ export default function ClienteDetailScreen() {
                     }
                     multiline
                     numberOfLines={4}
+                    style={{ width: "100%" }}
                   />
                 </View>
 
@@ -322,14 +423,16 @@ export default function ClienteDetailScreen() {
                     title="Cancelar"
                     variant="outline"
                     onPress={handleEditClose}
+                    disabled={isSaving}
                   />
                 </View>
 
                 <View style={styles.actionBtn}>
                   <Button
-                    title="Guardar"
+                    title={isSaving ? "Guardando..." : "Guardar"}
                     variant="primary"
                     onPress={handleSaveChanges}
+                    disabled={isSaving}
                   />
                 </View>
               </View>

@@ -56,7 +56,7 @@ export default function TextField({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: "85%",
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.card,

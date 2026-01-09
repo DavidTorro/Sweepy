@@ -4,15 +4,18 @@ import SegmentedControl from "@/components/ui/SegmentedControl";
 import SelectButton from "@/components/ui/SelectButton";
 import TextField from "@/components/ui/TextField";
 import { COLORS, FONTS } from "@/utils/theme";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
-import { FlatList, KeyboardAvoidingView, Modal, Platform, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
-import { clientes } from "../../../entregas/recursos_aules/types";
+import { clientes, loadClientes, createCliente } from "../../../entregas/recursos_aules/types";
 type SortKey = "nombre" | "id";
 
 export default function AdminPortal() {
   const [filterVisible, setFilterVisible] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
   const [filters, setFilters] = useState({
     activos: false,
     conEmail: false,
@@ -22,12 +25,40 @@ export default function AdminPortal() {
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
   const [baseClientes, setBaseClientes] = useState<Cliente[]>([]);
   const [clientesList, setClientesList] = useState<Cliente[]>([]);
+  const [newClienteForm, setNewClienteForm] = useState({
+    nombre: "",
+    nifCif: "",
+    telefono: "",
+    email: "",
+    notas: "",
+  });
+  const [isCreating, setIsCreating] = useState(false);
 
-  // Inicializar lista base de clientes (sin buscar ni filtrar)
-  useEffect(() => {
-    setBaseClientes(clientes);
-    setClientesList(clientes);
+  // Función para recargar clientes
+  const reloadClientes = useCallback(async () => {
+    try {
+      const loadedClientes = await loadClientes();
+      setBaseClientes(loadedClientes);
+      setClientesList(loadedClientes);
+    } catch (error) {
+      console.error('Error cargando clientes:', error);
+      // Fallback a datos iniciales
+      setBaseClientes(clientes);
+      setClientesList(clientes);
+    }
   }, []);
+
+  // Cargar clientes al iniciar
+  useEffect(() => {
+    reloadClientes();
+  }, [reloadClientes]);
+
+  // Recargar clientes cuando la pantalla vuelve al foco
+  useFocusEffect(
+    useCallback(() => {
+      reloadClientes();
+    }, [reloadClientes])
+  );
 
   // Filtrar y ordenar
   const applyFilterAndSort = (list: Cliente[], query: string, key: SortKey) => {
@@ -55,6 +86,47 @@ export default function AdminPortal() {
   useEffect(() => {
     setClientesList(applyFilterAndSort(baseClientes, searchText, sortKey));
   }, [baseClientes, searchText, sortKey]);
+
+  const handleCreateCliente = async () => {
+    if (!newClienteForm.nombre.trim()) {
+      Alert.alert("Error", "El nombre del cliente es obligatorio");
+      return;
+    }
+
+    setIsCreating(true);
+    try {
+      const newCliente = await createCliente(
+        {
+          nombre: newClienteForm.nombre,
+          nifCif: newClienteForm.nifCif || undefined,
+          telefono: newClienteForm.telefono || undefined,
+          email: newClienteForm.email || undefined,
+          notas: newClienteForm.notas || undefined,
+          activo: true,
+        },
+        baseClientes
+      );
+
+      // Recargar la lista de clientes
+      await reloadClientes();
+
+      setCreateModalVisible(false);
+      setNewClienteForm({
+        nombre: "",
+        nifCif: "",
+        telefono: "",
+        email: "",
+        notas: "",
+      });
+
+      Alert.alert("Éxito", "Cliente creado correctamente");
+    } catch (error) {
+      console.error("Error creando cliente:", error);
+      Alert.alert("Error", "No se pudo crear el cliente");
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -155,6 +227,159 @@ export default function AdminPortal() {
               </View>
             </View>
           </View>
+        </Modal>
+
+        {/* FAB BUTTON */}
+        <TouchableOpacity
+          style={styles.fabButton}
+          onPress={() => setCreateModalVisible(true)}
+        >
+          <Ionicons name="add" size={32} color="white" />
+        </TouchableOpacity>
+
+        {/* MODAL CREAR CLIENTE */}
+        <Modal
+          visible={createModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setCreateModalVisible(false)}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.modalOverlay}
+          >
+            <TouchableOpacity
+              style={styles.modalBackdrop}
+              onPress={() => setCreateModalVisible(false)}
+              activeOpacity={0.8}
+            />
+
+            <View style={styles.bottomSheet}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.scrollContent}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 12,
+                    marginTop: 8,
+                    width: "100%",
+                    paddingHorizontal: 20,
+                  }}
+                >
+                  <Text style={styles.modalTitle}>Crear Cliente</Text>
+                  <TouchableOpacity
+                    onPress={() => setCreateModalVisible(false)}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: -8,
+                    }}
+                  >
+                    <Ionicons
+                      name="close"
+                      size={28}
+                      color={COLORS.textSecondary}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.createForm}>
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>Nombre</Text>
+                    <TextField
+                      placeholder="Nombre del cliente"
+                      value={newClienteForm.nombre}
+                      onChangeText={(text) =>
+                        setNewClienteForm((p) => ({ ...p, nombre: text }))
+                      }
+                      style={{ width: "100%" }}
+                    />
+                  </View>
+
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>NIF/CIF</Text>
+                    <TextField
+                      placeholder="NIF/CIF"
+                      value={newClienteForm.nifCif}
+                      onChangeText={(text) =>
+                        setNewClienteForm((p) => ({ ...p, nifCif: text }))
+                      }
+                      style={{ width: "100%" }}
+                    />
+                  </View>
+
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>Teléfono</Text>
+                    <TextField
+                      placeholder="Teléfono"
+                      value={newClienteForm.telefono}
+                      onChangeText={(text) =>
+                        setNewClienteForm((p) => ({ ...p, telefono: text }))
+                      }
+                      keyboardType="phone-pad"
+                      style={{ width: "100%" }}
+                    />
+                  </View>
+
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>Email</Text>
+                    <TextField
+                      placeholder="Email"
+                      value={newClienteForm.email}
+                      onChangeText={(text) =>
+                        setNewClienteForm((p) => ({ ...p, email: text }))
+                      }
+                      keyboardType="email-address"
+                      style={{ width: "100%" }}
+                    />
+                  </View>
+
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>Notas</Text>
+                    <TextField
+                      placeholder="Notas adicionales"
+                      value={newClienteForm.notas}
+                      onChangeText={(text) =>
+                        setNewClienteForm((p) => ({ ...p, notas: text }))
+                      }
+                      multiline
+                      numberOfLines={4}
+                      style={{ width: "100%" }}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.formActions}>
+                  <View style={styles.actionBtn}>
+                    <Button
+                      title="Cancelar"
+                      variant="outline"
+                      onPress={() => setCreateModalVisible(false)}
+                      disabled={isCreating}
+                    />
+                  </View>
+
+                  <View style={styles.actionBtn}>
+                    <Button
+                      title={isCreating ? "Creando..." : "Crear"}
+                      variant="primary"
+                      onPress={handleCreateCliente}
+                      disabled={isCreating}
+                    />
+                  </View>
+                </View>
+
+                <View style={{ height: 30 }} />
+              </ScrollView>
+            </View>
+          </KeyboardAvoidingView>
         </Modal>
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -268,6 +493,98 @@ const styles = StyleSheet.create({
   },
 
   modalBtn: {
+    flex: 1,
+  },
+
+  // FAB BUTTON
+  fabButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+  },
+
+  // MODAL CREAR CLIENTE
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
+  },
+
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
+
+  bottomSheet: {
+    backgroundColor: COLORS.card,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingTop: 16,
+    paddingHorizontal: 0,
+    maxHeight: "85%",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: -8 },
+    shadowRadius: 16,
+    elevation: 10,
+    width: "100%",
+  },
+
+  scrollContent: {
+    paddingBottom: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    flexGrow: 1,
+  },
+
+  modalTitle: {
+    fontFamily: FONTS.bold,
+    fontSize: 20,
+    color: COLORS.text,
+    marginBottom: 16,
+  },
+
+  createForm: {
+    marginBottom: 12,
+    width: "100%",
+    alignItems: "center",
+    gap: 12,
+  },
+
+  fieldContainer: {
+    width: "92%",
+    maxWidth: 380,
+    alignItems: "flex-start",
+  },
+
+  label: {
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 6,
+  },
+
+  formActions: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    width: "92%",
+    maxWidth: 380,
+  },
+
+  actionBtn: {
     flex: 1,
   },
 });
