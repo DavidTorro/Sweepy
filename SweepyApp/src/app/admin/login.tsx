@@ -45,7 +45,7 @@ export default function LoginScreen() {
     };
 
     // usuario para pruebas:
-    if (email === "Sweepy" && password === "admin123") {
+    if (email === "Sweepy" && password === "admin1234") {
       router.replace(ROUTES.ADMIN);
       return;
       //TODO ver guardar sesion
@@ -127,6 +127,7 @@ export default function LoginScreen() {
 
             {/* BOTÓN LOGIN */}
             <Button
+              style={styles.formButton}
               title="Iniciar sesión"
               variant="primary"
               onPress={() => {
@@ -221,6 +222,11 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     color: COLORS.text,
     marginTop: 8,
+    width: "85%",
+    marginBottom: 25,
+  },
+
+  formButton: {
     width: "85%",
   },
 

@@ -1,5 +1,5 @@
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { COLORS, FONTS, SHADOWS } from "../../utils/theme";
+import { COLORS, FONTS, SHADOWS, SIZES } from "../../utils/theme";
 
 interface ButtonProps {
   title: string;
@@ -35,7 +35,12 @@ export default function Button({
 
   return (
     <TouchableOpacity
-      style={[styles.base, variantStyle, isDisabled && styles.disabled]}
+      style={[
+        styles.base,
+        variantStyle,
+        isDisabled && styles.disabled,
+        style,
+      ]}
       activeOpacity={0.7}
       disabled={isDisabled}
       onPress={onPress}
@@ -52,25 +57,25 @@ export default function Button({
 }
 
 const styles = StyleSheet.create({
+  /* --- BASE --- */
   base: {
-    width: "85%",
     paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: 999,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
-    ...SHADOWS.card
+    ...SHADOWS.card,
   },
 
-  /* --- VARIANTES DE BOTÓN --- */
-
+  /* --- VARIANTES --- */
   primaryButton: {
     backgroundColor: COLORS.primary,
   },
+
   primaryText: {
     color: "#fff",
     fontFamily: FONTS.semibold,
-    fontSize: 18,
+    fontSize: SIZES.medium,
   },
 
   outlineButton: {
@@ -78,10 +83,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.primary,
   },
+
   outlineText: {
     color: COLORS.primary,
     fontFamily: FONTS.semibold,
-    fontSize: 18,
+    fontSize: SIZES.medium,
   },
 
   ghostButton: {
@@ -89,10 +95,11 @@ const styles = StyleSheet.create({
     elevation: 0,
     shadowOpacity: 0,
   },
+
   ghostText: {
     color: COLORS.text,
     fontFamily: FONTS.semibold,
-    fontSize: 18,
+    fontSize: 16,
   },
 
   disabled: {

@@ -7,7 +7,7 @@ import Button from "../../components/ui/Button";
 import Separator from "../../components/ui/Separator";
 import TextField from "../../components/ui/TextField";
 import { APP, ERRORS, ROUTES } from "../../utils/constants";
-import { COLORS, FONTS } from "../../utils/theme";
+import { COLORS, FONTS, SIZES } from "../../utils/theme";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -108,6 +108,7 @@ export default function LoginScreen() {
 
             {/* BOTÓN LOGIN */}
             <Button
+              style={styles.formButton}
               title="Iniciar sesión"
               variant="primary"
               onPress={() => {
@@ -121,7 +122,11 @@ export default function LoginScreen() {
           <Separator text="O continúa con" />
 
           {/* Botón Google */}
-          <SocialButton onPress={() => console.log("Google login")} />
+          <SocialButton 
+            style={styles.formButton} 
+            title="Continuar con Google" 
+            onPress={() => console.log("Google login")} 
+          />
 
           {/* Registro */}
           <Text style={styles.register}>
@@ -250,6 +255,11 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     color: COLORS.text,
     marginTop: 8,
+    width: "85%",
+    marginBottom: 25,
+  },
+
+  formButton: {
     width: "85%",
   },
 

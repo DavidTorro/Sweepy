@@ -138,6 +138,7 @@ export default function RegisterScreen() {
               rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
               onRightIconPress={() => setShowPassword(!showPassword)}
               error={!!passwordError}
+              style={{ marginBottom: 25 }}
             />
 
             {/* MENSAJES DE ERROR */}
@@ -151,8 +152,9 @@ export default function RegisterScreen() {
               <Text style={styles.errorText}>{passwordError}</Text>
             )}
 
-            {/* BOTÓN */}
+            {/* BOTÓN REGISTER */}
             <Button
+              style={styles.formButton}
               title="Registrarse"
               variant="primary"
               onPress={() => {
@@ -166,8 +168,11 @@ export default function RegisterScreen() {
           <Separator text="O continúa con" />
 
           {/* Botón Google */}
-          <SocialButton onPress={() => console.log("Google login")} />
-
+          <SocialButton 
+            style={styles.formButton} 
+            title="Continuar con Google" 
+            onPress={() => console.log("Google register")} 
+          />
           {/* Ir a login */}
           <Text style={styles.login}>
             ¿Ya tienes una cuenta?{" "}
@@ -188,17 +193,20 @@ const styles = StyleSheet.create({
     paddingTop: 120,
     paddingBottom: 50,
   },
+
   logo: {
     width: 150,
     height: 150,
     resizeMode: "contain",
   },
+
   title: {
     fontFamily: FONTS.bold,
     fontSize: 40,
     color: COLORS.text,
     marginTop: 10,
   },
+
   subtitle: {
     fontFamily: FONTS.regular,
     fontSize: 14,
@@ -206,6 +214,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 30,
   },
+
   label: {
     textAlign: "left",
     fontFamily: FONTS.semibold,
@@ -214,21 +223,29 @@ const styles = StyleSheet.create({
     width: "85%",
     paddingBottom: 8,
   },
+
+  formButton: {
+    width: "85%",
+  },
+
   form: {
     width: "100%",
     alignItems: "center",
   },
+
   errorText: {
     width: "85%",
     color: COLORS.error,
     marginTop: 8,
     fontFamily: FONTS.regular,
   },
+
   login: {
     marginTop: 20,
     fontFamily: FONTS.regular,
     color: COLORS.textSecondary,
   },
+
   loginLink: {
     color: COLORS.text,
     fontFamily: FONTS.semibold,

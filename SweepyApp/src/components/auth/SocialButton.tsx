@@ -1,33 +1,58 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { COLORS, FONTS, SHADOWS, SIZES } from "../../utils/theme";
 
-interface GoogleButtonProps {
+interface SocialButtonProps {
   onPress: () => void;
+  title?: string;        
+  icon?: any;            
+  loading?: boolean;
+  disabled?: boolean;
+  style?: any;          
 }
 
-export default function SocialButton({ onPress }: GoogleButtonProps) {
+export default function SocialButton({
+  onPress,
+  title,
+  icon = require("../../../assets/social/google.webp"),
+  loading = false,
+  disabled = false,
+  style,
+}: SocialButtonProps) {
+  const isDisabled = disabled || loading;
+
   return (
-    <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.base,
+        isDisabled && styles.disabled,
+        style,
+      ]}
+      activeOpacity={0.7}
+      disabled={isDisabled}
+      onPress={onPress}
+    >
       <View style={styles.content}>
-
-        <Image
-          source={require("../../../assets/social/google.webp")}
-          style={styles.icon}
-        />
-
-        <Text style={styles.text}>Continuar con Google</Text>
+        {loading ? (
+          <ActivityIndicator color={COLORS.primary} />
+        ) : (
+          <>
+            <Image source={icon} style={styles.icon} />
+            <Text style={styles.text}>{title}</Text>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    width: "85%",
+  base: {
     backgroundColor: COLORS.card,
     paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: 999,
     justifyContent: "center",
+    alignItems: "center",
     ...SHADOWS.card,
   },
 
@@ -48,5 +73,9 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: SIZES.medium,
     color: COLORS.text,
+  },
+
+  disabled: {
+    opacity: 0.4,
   },
 });
