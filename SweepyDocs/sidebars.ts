@@ -14,16 +14,6 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Catálogo de componentes',
-      items: [
-        'catalogo/boton',
-        'catalogo/text-field',
-        'catalogo/card',
-        'catalogo/separator',
-      ],
-    },
-    {
-      type: 'category',
       label: 'Getting started',
       items: ['gettingstarted/clonar', 'gettingstarted/entorno'],
     },

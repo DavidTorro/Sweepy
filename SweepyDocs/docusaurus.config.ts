@@ -69,7 +69,6 @@ const config: Config = {
       items: [
         {type: 'doc', docId: 'app/que-es-sweepy', label: 'Sobre Sweepy', position: 'left'},
         {type: 'doc', docId: 'docs/login', label: 'Documentación', position: 'left'},
-        {type: 'doc', docId: 'catalogo/boton', label: 'Catálogo de componentes', position: 'left'},
         {type: 'doc', docId: 'gettingstarted/clonar', label: 'Getting started', position: 'left'},
         {href: 'https://github.com/deividturron', label: 'GitHub', position: 'right'},
       ],
@@ -91,15 +90,6 @@ const config: Config = {
             {label: 'Login', to: '/docs/login'},
             {label: 'Configuración', to: '/docs/configuracion'},
             {label: 'API', to: '/docs/api'},
-          ],
-        },
-        {
-          title: 'Catálogo',
-          items: [
-            {label: 'Botón', to: '/catalogo/boton'},
-            {label: 'Text Field', to: '/catalogo/text-field'},
-            {label: 'Card', to: '/catalogo/card'},
-            {label: 'Separator', to: '/catalogo/separator'},
           ],
         },
         {

@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <div style="display:flex; align-items:center; gap:8px;">
-      <div style="flex:1; display:flex; align-items:center; background:#fff; border:1px solid #d7dde2; border-radius:999px; padding:0 16px; height:50px; box-shadow:0 4px 10px rgba(0,0,0,0.04);">
-        <span style="color:#6f6f6f; margin-right:10px;">🔍</span>
-        <input type="text" placeholder="Buscar servicios" style="flex:1; border:none; outline:none; font-size:16px; color:#104e6a;" />
+    <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
+      <div style={{flex:1, display:'flex', alignItems:'center', background:'#fff', border:'1px solid #d7dde2', borderRadius:'999px', padding:'0 16px', height:'50px', boxShadow:'0 4px 10px rgba(0,0,0,0.04)'}}>
+        <span style={{color:'#6f6f6f', marginRight:'10px'}}>🔍</span>
+        <input type="text" placeholder="Buscar servicios" style={{flex:1, border:'none', outline:'none', fontSize:'16px', color:'#104e6a'}} />
       </div>
     </div>
   </div>
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <div style="flex:1; display:flex; align-items:center; background:#fff; border:1px solid #d7dde2; border-radius:999px; padding:0 16px; height:50px; box-shadow:0 4px 10px rgba(0,0,0,0.04);">
-      <input type="password" placeholder="••••••••" style="flex:1; border:none; outline:none; font-size:16px; color:#104e6a;" />
-      <span style="color:#6f6f6f; margin-left:10px;">👁️</span>
+    <div style={{flex:1, display:'flex', alignItems:'center', background:'#fff', border:'1px solid #d7dde2', borderRadius:'999px', padding:'0 16px', height:'50px', boxShadow:'0 4px 10px rgba(0,0,0,0.04)'}}>
+      <input type="password" placeholder="••••••••" style={{flex:1, border:'none', outline:'none', fontSize:'16px', color:'#104e6a'}} />
+      <span style={{color:'#6f6f6f', marginLeft:'10px'}}>👁️</span>
     </div>
   </div>
   
@@ -149,11 +149,11 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <div style="display:flex; flex-direction:column; gap:6px;">
-      <div style="flex:1; display:flex; align-items:center; background:#fff; border:2px solid #ff3b30; border-radius:999px; padding:0 16px; height:50px;">
-        <input type="email" placeholder="correo@ejemplo.com" style="flex:1; border:none; outline:none; font-size:16px; color:#104e6a;" />
+    <div style={{display:'flex', flexDirection:'column', gap:'6px'}}>
+      <div style={{flex:1, display:'flex', alignItems:'center', background:'#fff', border:'2px solid #ff3b30', borderRadius:'999px', padding:'0 16px', height:'50px'}}>
+        <input type="email" placeholder="correo@ejemplo.com" style={{flex:1, border:'none', outline:'none', fontSize:'16px', color:'#104e6a'}} />
       </div>
-      <span style="font-size:12px; color:#ff3b30;">Email inválido</span>
+      <span style={{fontSize:'12px', color:'#ff3b30'}}>Email inválido</span>
     </div>
   </div>
   

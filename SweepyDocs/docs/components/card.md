@@ -154,17 +154,17 @@ export const ClienteCard: React.FC<ClienteCardProps> = ({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <div style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.12); max-width:420px; border:1px solid #d7dde2;">
-      <div style="width:100%; height:200px; background:#e9fcfa; display:flex; align-items:center; justify-content:center; color:#00a190; font-weight:700;">Imagen del servicio</div>
-      <div style="padding:16px;">
-        <h3 style="font-size:16px; font-weight:700; color:#104e6a; margin:0 0 4px 0;">Limpieza de Apartamento</h3>
-        <p style="font-size:14px; color:#6f6f6f; margin:0 0 12px 0; line-height:1.5;">Limpieza profunda de tu hogar. Servicio profesional y confiable.</p>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style={{background:'#fff', borderRadius:'18px', overflow:'hidden', boxShadow:'0 4px 12px rgba(0,0,0,0.12)', maxWidth:'420px', border:'1px solid #d7dde2'}}>
+      <div style={{width:'100%', height:'200px', background:'#e9fcfa', display:'flex', alignItems:'center', justifyContent:'center', color:'#00a190', fontWeight:'700'}}>Imagen del servicio</div>
+      <div style={{padding:'16px'}}>
+        <h3 style={{fontSize:'16px', fontWeight:'700', color:'#104e6a', margin:'0 0 4px 0'}}>Limpieza de Apartamento</h3>
+        <p style={{fontSize:'14px', color:'#6f6f6f', margin:'0 0 12px 0', lineHeight:'1.5'}}>Limpieza profunda de tu hogar. Servicio profesional y confiable.</p>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <div>
-            <div style="font-size:18px; font-weight:700; color:#00b8a9;">$75</div>
-            <div style="font-size:12px; color:#f59e0b; margin-top:4px;">⭐ 4.8 (24)</div>
+            <div style={{fontSize:'18px', fontWeight:'700', color:'#00b8a9'}}>$75</div>
+            <div style={{fontSize:'12px', color:'#f59e0b', marginTop:'4px'}}>⭐ 4.8 (24)</div>
           </div>
-          <button style="background:linear-gradient(135deg, #00b8a9 0%, #00a190 100%); color:white; padding:10px 14px; border-radius:999px; border:none; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(0,184,169,0.18);">Ver Más</button>
+          <button style={{background:'linear-gradient(135deg, #00b8a9 0%, #00a190 100%)', color:'white', padding:'10px 14px', borderRadius:'999px', border:'none', fontWeight:'700', cursor:'pointer', boxShadow:'0 4px 12px rgba(0,184,169,0.18)'}}>Ver Más</button>
         </div>
       </div>
     </div>

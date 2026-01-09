@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <button style="width: 100%; padding: 14px 20px; border-radius: 999px; border: none; color: white; font-weight: 700; background: linear-gradient(135deg, #00b8a9 0%, #00a190 100%); box-shadow: 0 4px 12px rgba(0,184,169,0.18);">Publicar</button>
+    <button style={{width: '100%', padding: '14px 20px', borderRadius: '999px', border: 'none', color: 'white', fontWeight: '700', background: 'linear-gradient(135deg, #00b8a9 0%, #00a190 100%)', boxShadow: '0 4px 12px rgba(0,184,169,0.18)'}}>Publicar</button>
   </div>
   
   <div class="component-code">
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <button style="width: 100%; padding: 14px 20px; border-radius: 999px; background: transparent; border: 2px solid #00b8a9; color: #00b8a9; font-weight: 700;">Cancelar</button>
+    <button style={{width: '100%', padding: '14px 20px', borderRadius: '999px', background: 'transparent', border: '2px solid #00b8a9', color: '#00b8a9', fontWeight: '700'}}>Cancelar</button>
   </div>
   
   <div class="component-code">
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
 
 <div class="component-showcase">
   <div class="component-preview">
-    <button style="width: 100%; padding: 14px 20px; border-radius: 999px; background: transparent; border: none; color: #104e6a; font-weight: 700;">Ver detalle</button>
+    <button style={{width: '100%', padding: '14px 20px', borderRadius: '999px', background: 'transparent', border: 'none', color: '#104e6a', fontWeight: '700'}}>Ver detalle</button>
   </div>
   
   <div class="component-code">

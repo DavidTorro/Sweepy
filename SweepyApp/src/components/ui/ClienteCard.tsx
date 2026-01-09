@@ -1,5 +1,6 @@
 import { COLORS, FONTS } from "@/utils/theme";
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
 
 interface Props {
@@ -7,8 +8,15 @@ interface Props {
 }
 
 export default function ClienteCard({ cliente }: Props) {
+  const handlePress = () => {
+    router.push({
+      pathname: "/admin/[id]",
+      params: { id: cliente.id },
+    });
+  };
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={handlePress}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.nombre}>{cliente.nombre}</Text>
@@ -33,7 +41,7 @@ export default function ClienteCard({ cliente }: Props) {
       <Text style={styles.linea}>
         Email: {cliente.email ?? "—"}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
