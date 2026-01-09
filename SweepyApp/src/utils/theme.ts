@@ -41,3 +41,22 @@ export const SHADOWS = {
     elevation: 3,
   },
 };
+
+// Export para compatibilidad con las pantallas del tab
+export const theme = {
+  colors: {
+    primary: COLORS.primary,
+    primaryLight: COLORS.primaryLight,
+    background: COLORS.background,
+    mint: COLORS.mint,
+    card: COLORS.card,
+    text: COLORS.text,
+    textSecondary: COLORS.textSecondary,
+    border: COLORS.border,
+    success: COLORS.success,
+    error: COLORS.error,
+  },
+  fonts: FONTS,
+  sizes: SIZES,
+  shadows: SHADOWS,
+};

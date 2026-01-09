@@ -1,9 +1,9 @@
-import Button from "@/src/components/ui/Button";
-import { COLORS } from "@/src/utils/theme";
+import Button from "@/components/ui/Button";
+import { COLORS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { StyleSheet, Text, View, Image } from "react-native";
 import { MotiImage } from "moti";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function AdminPortal() {
   return (

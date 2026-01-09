@@ -1,5 +1,5 @@
+import { COLORS, FONTS } from "@/utils/theme";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { COLORS, FONTS } from "@/src/utils/theme";
 
 type Option<T extends string> = {
   label: string;

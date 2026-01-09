@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import SocialButton from "../../components/auth/SocialButton";
@@ -7,7 +7,7 @@ import Button from "../../components/ui/Button";
 import Separator from "../../components/ui/Separator";
 import TextField from "../../components/ui/TextField";
 import { APP, ERRORS, ROUTES } from "../../utils/constants";
-import { COLORS, FONTS, SIZES } from "../../utils/theme";
+import { COLORS, FONTS } from "../../utils/theme";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -18,6 +18,7 @@ export default function LoginScreen() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const validateAndRegister = () => {
     let isValid = true;
@@ -36,6 +37,15 @@ export default function LoginScreen() {
     }
 
     if (!isValid) return;
+
+    // usuario para pruebas:
+        if (email === "David" && password === "1234") {
+          router.replace(ROUTES.EXPLORAR);
+          return;
+          //TODO ver guardar sesion
+        } else {
+          setLoginError(ERRORS.LOGIN_ERROR);
+        }
 
     console.log("Usuario logeado con éxito:");
     console.log("Email:", email);

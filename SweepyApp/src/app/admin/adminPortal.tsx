@@ -1,14 +1,14 @@
+import Button from "@/components/ui/Button";
+import ClienteCard from "@/components/ui/ClienteCard";
+import SegmentedControl from "@/components/ui/SegmentedControl";
+import SelectButton from "@/components/ui/SelectButton";
+import TextField from "@/components/ui/TextField";
+import { COLORS, FONTS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Modal, Platform, StyleSheet, Text, View, FlatList, Pressable } from "react-native";
-import Button from "@/src/components/ui/Button";
-import TextField from "@/src/components/ui/TextField";
-import ClienteCard from "@/src/components/ui/ClienteCard";
-import { COLORS, FONTS } from "@/src/utils/theme";
-import { clientes } from "@/entregas/recursos_aules/types";
-import type { Cliente } from "@/entregas/recursos_aules/types";
-import SelectButton from "@/src/components/ui/SelectButton";
-import SegmentedControl from "@/src/components/ui/SegmentedControl";
+import { FlatList, KeyboardAvoidingView, Modal, Platform, StyleSheet, Text, View } from "react-native";
+import type { Cliente } from "../../../entregas/recursos_aules/types";
+import { clientes } from "../../../entregas/recursos_aules/types";
 type SortKey = "nombre" | "id";
 
 export default function AdminPortal() {

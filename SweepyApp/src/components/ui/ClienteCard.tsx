@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
-import { COLORS, FONTS } from "@/src/utils/theme";
-import type { Cliente } from "@/entregas/recursos_aules/types";
+import { COLORS, FONTS } from "@/utils/theme";
+import { StyleSheet, Text, View } from "react-native";
+import type { Cliente } from "../../../entregas/recursos_aules/types";
 
 interface Props {
   cliente: Cliente;

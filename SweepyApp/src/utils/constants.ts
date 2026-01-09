@@ -8,6 +8,12 @@ export const ROUTES = {
   REGISTER: "/auth/register",
   ADMINLOGIN: "/admin/login",
   ADMIN: "/admin/adminPortal",
+  // Rutas Tabs
+  EXPLORAR: "/(tabs)",
+  MIS_ANUNCIOS: "/(tabs)/mis-anuncios",
+  CREAR: "/(tabs)/crear",
+  CHAT: "/(tabs)/chat",
+  PERFIL: "/(tabs)/perfil",
 };
 
 export const ERRORS = {
