@@ -1,0 +1,416 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.pageWrapper {
+  background: linear-gradient(-45deg, #ffffff, #e3f9f7, #ffffff, #d1f4f0);
+  background-size: 400% 400%;
+  animation: gradientPan 10s ease infinite;
+}
+
+@keyframes gradientPan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+[data-theme='dark'] .pageWrapper {
+  background: linear-gradient(-45deg, #0d1117, #1e3a5f, #0f172a, #2d3748);
+  background-size: 400% 400%;
+  animation: gradientPan 10s ease infinite;
+}
+
+.heroBanner {
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: #0b3f55;
+}
+
+[data-theme='dark'] .heroBanner {
+  background: transparent;
+  color: #f3f4f6;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroLogo {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 1.5rem;
+  animation: float 3s ease-in-out infinite, fadeIn 0.8s ease-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+  animation: trackingIn 1.2s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
+
+@keyframes trackingIn {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    letter-spacing: -1px;
+    opacity: 1;
+  }
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #0b3f55;
+  opacity: 0.9;
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+[data-theme='dark'] .heroSubtitle {
+  color: #e5e7eb;
+}
+
+.heroDescription {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  color: #5e7380;
+  animation: slideUp 0.8s ease-out 0.5s both;
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+[data-theme='dark'] .heroDescription {
+  color: #9ca3af;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 4rem 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  animation: slideUp 0.8s ease-out 0.7s both;
+}
+
+.primaryButton {
+  background: white !important;
+  color: #00d6cf !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  border: 2px solid #00d6cf !important;
+  box-shadow: 0 2px 8px rgba(0, 214, 207, 0.15);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .primaryButton {
+  background: #1e293b !important;
+  color: #63f0e8 !important;
+  border-color: #63f0e8 !important;
+}
+
+[data-theme='dark'] .primaryButton:hover {
+  background: #334155 !important;
+  box-shadow: 0 8px 16px rgba(99, 240, 232, 0.2);
+}
+
+.secondaryButton {
+  background: white !important;
+  color: #00d6cf !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 8px !important;
+  border: 2px solid #00d6cf !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 214, 207, 0.15);
+}
+
+.secondaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .secondaryButton {
+  background: #1e293b !important;
+  color: #63f0e8 !important;
+  border-color: #63f0e8 !important;
+}
+
+[data-theme='dark'] .secondaryButton:hover {
+  background: #334155 !important;
+  box-shadow: 0 8px 16px rgba(99, 240, 232, 0.2);
+}
+
+/* Features Section */
+.features {
+  padding: 4rem 2rem;
+  background: transparent;
+  animation: fadeIn 0.8s ease-out both;
+}
+
+[data-theme='dark'] .features {
+  background: transparent;
+}
+
+.featuresTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #1f2937;
+  animation: slideUp 0.6s ease-out both;
+}
+
+[data-theme='dark'] .featuresTitle {
+  color: #f3f4f6;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 18px;
+  border: 1.5px solid #d3e6ee;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out both;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.featureCard:nth-child(1) { animation-delay: 0.1s; }
+.featureCard:nth-child(2) { animation-delay: 0.2s; }
+.featureCard:nth-child(3) { animation-delay: 0.3s; }
+.featureCard:nth-child(4) { animation-delay: 0.4s; }
+.featureCard:nth-child(5) { animation-delay: 0.5s; }
+.featureCard:nth-child(6) { animation-delay: 0.6s; }
+
+.featureCard:hover {
+  border-color: #00d6cf;
+  box-shadow: 0 12px 28px rgba(0, 214, 207, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.featureCard h3 {
+  font-size: 1.25rem;
+  color: #0b3f55;
+  margin-bottom: 0.75rem;
+}
+
+.featureCard p {
+  color: #5e7380;
+  line-height: 1.6;
+  margin: 0;
+}
+
+[data-theme='dark'] .featureCard {
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(10px);
+  border-color: #334155;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .featureCard:hover {
+  border-color: #63f0e8;
+  box-shadow: 0 12px 28px rgba(99, 240, 232, 0.2), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .featureCard h3 {
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .featureCard p {
+  color: #9ca3af;
+}
+
+/* Stack Section */
+.stack {
+  padding: 4rem 2rem;
+  background: transparent;
+  animation: fadeIn 0.8s ease-out both;
+}
+
+[data-theme='dark'] .stack {
+  background: transparent;
+}
+
+.stackTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #0b3f55;
+  animation: slideUp 0.6s ease-out both;
+}
+
+[data-theme='dark'] .stackTitle {
+  color: #f3f4f6;
+}
+
+.stackGrid {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.stackCategory {
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.stackCategory:nth-child(1) { animation-delay: 0.1s; }
+.stackCategory:nth-child(2) { animation-delay: 0.2s; }
+.stackCategory:nth-child(3) { animation-delay: 0.3s; }
+
+.stackCategory h3 {
+  font-size: 1.5rem;
+  color: #0b3f55;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+[data-theme='dark'] .stackCategory h3 {
+  color: #f3f4f6;
+}
+
+.stackTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.stackTag {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  border: 1.5px solid #d3e6ee;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0b3f55;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stackTag svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.stackTag:hover {
+  border-color: #00d6cf;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 214, 207, 0.2);
+}
+
+[data-theme='dark'] .stackTag {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: #334155;
+  color: #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .stackTag:hover {
+  border-color: #63f0e8;
+  box-shadow: 0 4px 12px rgba(99, 240, 232, 0.25);
+}
+
+@media screen and (max-width: 996px) {
+  .featuresTitle,
+  .stackTitle {
+    font-size: 1.8rem;
+  }
+
+  .buttons {
+    gap: 1rem;
+  }
+}

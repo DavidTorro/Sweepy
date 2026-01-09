@@ -1,0 +1,228 @@
+/**
+ * Sweepy Documentación - Estilos Personalizados
+ * Color scheme moderno para plataforma de servicios de limpieza
+ */
+
+/* Colores principales inspirados en el logo (aqua -> teal) */
+:root {
+  --ifm-color-primary: #00d6cf;
+  --ifm-color-primary-dark: #00b8c0;
+  --ifm-color-primary-darker: #009fb0;
+  --ifm-color-primary-darkest: #007f94;
+  --ifm-color-primary-light: #63f0e8;
+  --ifm-color-primary-lighter: #b6faf5;
+  --ifm-color-primary-lightest: #e8fffd;
+  
+  /* Colores secundarios y acentos */
+  --ifm-color-secondary: #0b3f55;
+  --ifm-color-success: #39d6c3;
+  --ifm-color-warning: #f59e0b;
+  --ifm-color-danger: #ff3b30;
+  
+  /* Tipografía y fondos */
+  --ifm-background-color: #f5fbfe;
+  --ifm-font-color-base: #0b3f55;
+  --ifm-heading-color: #0b3f55;
+  --ifm-code-font-size: 95%;
+  --ifm-toc-border-color: #d3e6ee;
+  
+  /* Código */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 214, 207, 0.08);
+  --docusaurus-highlighted-code-line-border-left-color: #00d6cf;
+}
+
+/* Modo oscuro */
+[data-theme='dark'] {
+  --ifm-color-primary: #63f0e8;
+  --ifm-color-primary-dark: #3ddfd7;
+  --ifm-color-primary-darker: #1dc9c2;
+  --ifm-color-primary-darkest: #0e9ba1;
+  --ifm-color-primary-light: #b6faf5;
+  --ifm-color-primary-lighter: #dffdfb;
+  --ifm-color-primary-lightest: #edfffe;
+  
+  --ifm-background-color: #0f172a;
+  --ifm-font-color-base: #e5e7eb;
+  --ifm-heading-color: #f3f4f6;
+  --docusaurus-highlighted-code-line-bg: rgba(99, 240, 232, 0.14);
+  --docusaurus-highlighted-code-line-border-left-color: #63f0e8;
+}
+
+/* Hacer transparentes los contenedores para que el gradiente sea continuo */
+main,
+article,
+.main-wrapper,
+.container,
+.container-fluid,
+section {
+  background: transparent !important;
+}
+
+/* Excepto elementos específicos que necesitan fondo */
+.navbar,
+.footer,
+.card {
+  background: initial;
+}
+
+/* Estilos personalizados Sweepy */
+.navbar {
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+[data-theme='dark'] .navbar {
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.navbar__title {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.hero {
+  background: #ffffff;
+  color: #0b3f55;
+}
+
+[data-theme='dark'] .hero {
+  background: #0f172a;
+  color: #f3f4f6;
+}
+
+.footer {
+  background: #ffffff;
+  border-top: 3px solid #00d6cf;
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.footer__links {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.25rem;
+  text-align: left;
+  margin: 0 auto;
+  width: fit-content;
+  padding-bottom: 0.5rem;
+}
+
+.footer__bottom {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.footer__col,
+.footer__items,
+.footer__title {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.footer__title {
+  white-space: nowrap;
+}
+
+.footer__items li {
+  white-space: nowrap;
+}
+
+[data-theme='dark'] .footer {
+  background: #1e293b;
+  border-top: 3px solid #63f0e8;
+}
+
+.button {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.button--primary {
+  background: linear-gradient(135deg, #00d6cf 0%, #009fb0 100%);
+  border: none;
+}
+
+.button--primary:hover {
+  background: linear-gradient(135deg, #00c0c8 0%, #0089a2 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 214, 207, 0.28);
+}
+
+.card {
+  border: 1.5px solid #d7dde2;
+  border-radius: 18px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: #00d6cf;
+  box-shadow: 0 12px 24px rgba(0, 214, 207, 0.12);
+  transform: translateY(-4px);
+}
+
+[data-theme='dark'] .card {
+  border-color: #1f2937;
+}
+
+[data-theme='dark'] .card:hover {
+  border-color: #7beadd;
+  box-shadow: 0 12px 24px rgba(123, 234, 221, 0.16);
+}
+
+/* Componentes específicos */
+.component-showcase {
+  background: #f5fbfe;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  border-left: 4px solid #00d6cf;
+}
+
+[data-theme='dark'] .component-showcase {
+  background: #111827;
+  border-left-color: #63f0e8;
+}
+
+.component-code {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.component-preview {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #d3e6ee;
+}
+
+[data-theme='dark'] .component-preview {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+/* Enlaces */
+a {
+  color: #00c8d5;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #009fb0;
+}
+
+[data-theme='dark'] a {
+  color: #63f0e8;
+}
+
+[data-theme='dark'] a:hover {
+  color: #9ef7f1;
+}
