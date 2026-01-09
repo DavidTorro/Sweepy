@@ -205,23 +205,26 @@ export default function ClienteDetailScreen() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: 20,
+                  marginBottom: 12,
+                  marginTop: 8,
                   width: "100%",
+                  paddingHorizontal: 20,
                 }}
               >
                 <Text style={styles.modalTitle}>Editar Cliente</Text>
                 <TouchableOpacity
                   onPress={handleEditClose}
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 40,
+                    height: 40,
                     justifyContent: "center",
                     alignItems: "center",
+                    marginRight: -8,
                   }}
                 >
                   <Ionicons
                     name="close"
-                    size={24}
+                    size={28}
                     color={COLORS.textSecondary}
                   />
                 </TouchableOpacity>
@@ -497,14 +500,14 @@ const styles = StyleSheet.create({
 
   form: {
     marginBottom: 12,
-    width: "100%",
+    width: "90%",
     alignItems: "center",
     gap: 12,
   },
 
   fieldContainer: {
     width: "92%",
-    maxWidth: 420,
+    maxWidth: 380,
     alignItems: "flex-start",
   },
 
@@ -517,11 +520,12 @@ const styles = StyleSheet.create({
 
   stateToggle: {
     marginTop: 12,
+    width: "92%",
+    maxWidth: 380,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
     gap: 12,
-    width: "100%",
   },
 
   toggleBtn: {
@@ -563,7 +567,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     width: "92%",
-    maxWidth: 420,
+    maxWidth: 380,
   },
 
   actionBtn: {
