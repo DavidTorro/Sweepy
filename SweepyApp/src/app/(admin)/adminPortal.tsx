@@ -1,9 +1,3 @@
-import Button from "../../components/ui/Button";
-import ClienteCard from "../../components/ui/ClienteCard";
-import SegmentedControl from "../../components/ui/SegmentedControl";
-import SelectButton from "../../components/ui/SelectButton";
-import TextField from "../../components/ui/TextField";
-import { COLORS, FONTS } from "../../utils/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "expo-router";
@@ -11,6 +5,12 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
 import { clientes, createCliente, loadClientes } from "../../../entregas/recursos_aules/types";
+import Button from "../../components/ui/Button";
+import ClienteCard from "../../components/ui/ClienteCard";
+import SegmentedControl from "../../components/ui/SegmentedControl";
+import SelectButton from "../../components/ui/SelectButton";
+import TextField from "../../components/ui/TextField";
+import { COLORS, FONTS } from "../../utils/theme";
 type SortKey = "nombre" | "id";
 
 export default function AdminPortal() {

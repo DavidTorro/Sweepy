@@ -1,5 +1,5 @@
-import { Stack } from 'expo-router';
 import { COLORS, FONTS } from '@/utils/theme';
+import { Stack } from 'expo-router';
 
 export default function AdminLayout() {
   return (

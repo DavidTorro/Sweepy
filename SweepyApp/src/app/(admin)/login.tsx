@@ -1,11 +1,11 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import { useState } from "react";
-import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
 import { APP, ERRORS, ROUTES } from "@/utils/constants";
 import { COLORS, FONTS } from "@/utils/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
