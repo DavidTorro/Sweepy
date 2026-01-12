@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import { ROUTES } from "@/utils/constants";
 import { COLORS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -45,7 +46,7 @@ export default function AdminPortal() {
             title="Volver a la página principal"
             variant="ghost"
             onPress={() => {
-              router.replace("/auth/login");
+              router.replace(ROUTES.EXPLORAR);
               console.log("Se ha vuelto a la página principal");
             }}
             />

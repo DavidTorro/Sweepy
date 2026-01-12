@@ -1,3 +1,4 @@
+import { ROUTES } from "@/utils/constants";
 import { COLORS, FONTS } from "@/utils/theme";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -10,7 +11,7 @@ interface Props {
 export default function ClienteCard({ cliente }: Props) {
   const handlePress = () => {
     router.push({
-      pathname: "/admin/[id]",
+      pathname: ROUTES.CLIENTBYID,
       params: { id: cliente.id },
     });
   };

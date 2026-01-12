@@ -1,3 +1,4 @@
+import RequireAuth from '@/components/auth/RequireAuth';
 import { theme } from '@/utils/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -60,13 +61,14 @@ export default function ChatScreen() {
   ]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Mensajes</Text>
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search" size={20} color="#999" />
+    <RequireAuth>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Mensajes</Text>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search" size={20} color="#999" />
           </TouchableOpacity>
         </View>
 
@@ -140,6 +142,7 @@ export default function ChatScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </RequireAuth>
   );
 }
 

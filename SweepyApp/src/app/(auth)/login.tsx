@@ -2,6 +2,7 @@ import SocialButton from "@/components/auth/SocialButton";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
+import { useAuth } from "@/providers/AuthProvider";
 import { APP, ERRORS, ROUTES } from "@/utils/constants";
 import { COLORS, FONTS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,6 +11,7 @@ import { useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function LoginScreen() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +27,7 @@ export default function LoginScreen() {
 
     setEmailError("");
     setPasswordError("");
+    setLoginError("");
 
     if (email.trim() === "") {
       setEmailError(ERRORS.EMAIL_REQUIRED);
@@ -38,17 +41,13 @@ export default function LoginScreen() {
 
     if (!isValid) return;
 
-    // usuario para pruebas:
-        if (email === "David" && password === "1234") {
-          router.replace(ROUTES.EXPLORAR);
-          return;
-          //TODO ver guardar sesion
-        } else {
-          setLoginError(ERRORS.LOGIN_ERROR);
-        }
-
-    console.log("Usuario logeado con éxito:");
-    console.log("Email:", email);
+    // Intentar login
+    const success = login(email, password);
+    if (success) {
+      router.replace(ROUTES.EXPLORAR);
+    } else {
+      setLoginError(ERRORS.LOGIN_ERROR);
+    }
   };
 
   return (

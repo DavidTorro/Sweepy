@@ -1,14 +1,15 @@
+import RequireAuth from '@/components/auth/RequireAuth';
 import { theme } from '@/utils/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -48,8 +49,9 @@ export default function CrearScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <RequireAuth>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Crear anuncio</Text>
@@ -212,6 +214,7 @@ export default function CrearScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </RequireAuth>
   );
 }
 

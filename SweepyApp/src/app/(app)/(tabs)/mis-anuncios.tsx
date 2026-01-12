@@ -1,3 +1,4 @@
+import RequireAuth from '@/components/auth/RequireAuth';
 import { ROUTES } from '@/utils/constants';
 import { theme } from '@/utils/theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -48,8 +49,9 @@ export default function MisAnunciosScreen() {
   ]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <RequireAuth>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Mis anuncios</Text>
@@ -139,6 +141,7 @@ export default function MisAnunciosScreen() {
         )}
       </ScrollView>
     </SafeAreaView>
+    </RequireAuth>
   );
 }
 

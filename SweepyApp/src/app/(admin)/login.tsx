@@ -3,11 +3,14 @@ import TextField from "@/components/ui/TextField";
 import { APP, ERRORS, ROUTES } from "@/utils/constants";
 import { COLORS, FONTS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useAuth } from "../../providers/AuthProvider";
 
 export default function LoginScreen() {
+  const { logout, loginAdmin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +20,29 @@ export default function LoginScreen() {
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  // TODO: validar que solo administradores puedan loguearse
+  const handleLogout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Cerrar sesión",
+          onPress: () => {
+            logout();
+            router.replace(ROUTES.EXPLORAR);
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const validateAndRegister = () => {
     let isValid = true;
 
@@ -42,19 +67,15 @@ export default function LoginScreen() {
 
     if (!isValid) {
       return;
-    };
+    }
 
-    // usuario para pruebas:
-    if (email === "Sweepy" && password === "admin1234") {
+    // Intentar login de admin
+    const success = loginAdmin(email, password);
+    if (success) {
       router.replace(ROUTES.ADMIN);
-      return;
-      //TODO ver guardar sesion
     } else {
       setLoginError(ERRORS.LOGIN_ERROR);
     }
-
-    console.log("Admin logeado con éxito:");
-    console.log("Email:", email);
   };
 
   return (
@@ -137,6 +158,17 @@ export default function LoginScreen() {
             />
           </View>
 
+          {/* Link volver a página principal */}
+          <Text style={styles.noAdmin}>
+            ¿No eres administrador?{" "}
+            <Text
+              style={styles.noAdminLink}
+              onPress={() => router.replace(ROUTES.EXPLORAR)}
+            >
+              Vuelve a la página principal
+            </Text>
+          </Text>
+
           {/* MODAL OLVIDAR CONTRASEÑA */}
           <Modal
             visible={forgotVisible}
@@ -183,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 120,
+    paddingTop: 60,
   },
 
   logo: {
@@ -239,6 +271,20 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     marginTop: 8,
     fontFamily: FONTS.regular,
+  },
+
+  noAdmin: {
+    marginTop: 16,
+    marginBottom: 20,
+    textAlign: "center",
+    fontFamily: FONTS.regular,
+    color: COLORS.textSecondary,
+    fontSize: 14,
+  },
+
+  noAdminLink: {
+    color: COLORS.text,
+    fontFamily: FONTS.semibold,
   },
 
   modalOverlay: {

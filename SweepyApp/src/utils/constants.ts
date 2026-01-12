@@ -4,16 +4,19 @@ export const APP = {
 };
 
 export const ROUTES = {
-  LOGIN: "/login",
-  REGISTER: "/register",
-  ADMINLOGIN: "/admin/login",
-  ADMIN: "/admin/adminPortal",
+  // Rutas Auth
+  LOGIN: "/(auth)/login",
+  REGISTER: "/(auth)/register",
+  // Rutas Admin
+  ADMINLOGIN: "/(admin)/login",
+  ADMIN: "/(admin)",
+  CLIENTBYID: "/(admin)/[id]",
   // Rutas Tabs
-  EXPLORAR: "/",
-  MIS_ANUNCIOS: "/mis-anuncios",
-  CREAR: "/crear",
-  CHAT: "/chat",
-  PERFIL: "/perfil",
+  EXPLORAR: "/(app)/(tabs)",
+  MIS_ANUNCIOS: "/(app)/(tabs)/mis-anuncios",
+  CREAR: "/(app)/(tabs)/crear",
+  CHAT: "/(app)/(tabs)/chat",
+  PERFIL: "/(app)/(tabs)/perfil",
 };
 
 export const ERRORS = {

@@ -1,14 +1,16 @@
+import RequireAuth from '@/components/auth/RequireAuth';
+import { useAuth } from '@/providers/AuthProvider';
 import { theme } from '@/utils/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Alert,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -22,6 +24,8 @@ interface MenuItem {
 }
 
 export default function PerfilScreen() {
+  const { user, logout } = useAuth();
+  
   const userStats = {
     rating: 4.8,
     reviews: 24,
@@ -32,7 +36,7 @@ export default function PerfilScreen() {
   const handleLogout = () => {
     Alert.alert('Cerrar sesión', '¿Estás seguro?', [
       { text: 'Cancelar', onPress: () => {}, style: 'cancel' },
-      { text: 'Cerrar sesión', onPress: () => {}, style: 'destructive' },
+      { text: 'Cerrar sesión', onPress: logout, style: 'destructive' },
     ]);
   };
 
@@ -84,8 +88,9 @@ export default function PerfilScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <RequireAuth>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <Image
@@ -95,8 +100,8 @@ export default function PerfilScreen() {
             style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
-            <Text style={styles.userName}>Juan Díaz</Text>
-            <Text style={styles.userHandle}>@juandiaz</Text>
+            <Text style={styles.userName}>{user?.name || 'Usuario'}</Text>
+            <Text style={styles.userHandle}>@{user?.email || 'usuario'}</Text>
             <View style={styles.ratingContainer}>
               <Ionicons name="star" size={14} color="#FFB800" />
               <Text style={styles.rating}>{userStats.rating}</Text>
@@ -179,6 +184,7 @@ export default function PerfilScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </RequireAuth>
   );
 }
 

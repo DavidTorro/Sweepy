@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+    Alert,
     KeyboardAvoidingView,
     Modal,
     Platform,
@@ -13,11 +14,10 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Alert
+    View
 } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
-import { clientes, loadClientes, updateCliente, deleteCliente } from "../../../entregas/recursos_aules/types";
+import { clientes, deleteCliente, loadClientes, updateCliente } from "../../../entregas/recursos_aules/types";
 
 export default function ClienteDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -190,7 +190,7 @@ export default function ClienteDetailScreen() {
               color={COLORS.text}
             />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detalles del Cliente</Text>
+          <Text style={[styles.headerTitle, { color: COLORS.text }]}>Detalles del Cliente</Text>
           <View style={{ width: 44 }} />
         </View>
 
@@ -448,12 +448,12 @@ export default function ClienteDetailScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: 70,
-    paddingHorizontal: 20,
-    paddingBottom: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingTop: 16,
+    paddingHorizontal: 12,
+    paddingBottom: 8,
   },
 
   backButton: {

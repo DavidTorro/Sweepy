@@ -15,7 +15,17 @@ export default function AdminLayout() {
           fontSize: 18,
         },
         headerTitle: 'Administración',
+        headerBackVisible: false,
       }}
-    />
+    >
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: true,
+          headerBackVisible: false,
+          headerTitle: "Detalles del Cliente",
+        }}
+      />
+    </Stack>
   );
 }

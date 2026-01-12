@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
@@ -10,10 +10,16 @@ import ClienteCard from "../../components/ui/ClienteCard";
 import SegmentedControl from "../../components/ui/SegmentedControl";
 import SelectButton from "../../components/ui/SelectButton";
 import TextField from "../../components/ui/TextField";
+import { useAuth } from "../../providers/AuthProvider";
+import { ROUTES } from "../../utils/constants";
 import { COLORS, FONTS } from "../../utils/theme";
+import RequireAuth from "../../components/auth/RequireAuth";
+
 type SortKey = "nombre" | "id";
 
-export default function AdminPortal() {
+function AdminPortalContent() {
+  const router = useRouter();
+  const { logout } = useAuth();
   const [filterVisible, setFilterVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [filters, setFilters] = useState({
@@ -126,6 +132,29 @@ export default function AdminPortal() {
     } finally {
       setIsCreating(false);
     }
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Cerrar sesión",
+          onPress: () => {
+            logout();
+            router.replace(ROUTES.EXPLORAR);
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -245,6 +274,14 @@ export default function AdminPortal() {
           onPress={() => setCreateModalVisible(true)}
         >
           <Ionicons name="add" size={32} color="white" />
+        </TouchableOpacity>
+
+        {/* FAB LOGOUT BUTTON */}
+        <TouchableOpacity
+          style={styles.fabLogoutButton}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={32} color="white" />
         </TouchableOpacity>
 
         {/* MODAL CREAR CLIENTE */}
@@ -396,6 +433,14 @@ export default function AdminPortal() {
   );
 }
 
+export default function AdminPortal() {
+  return (
+    <RequireAuth role="admin">
+      <AdminPortalContent />
+    </RequireAuth>
+  );
+}
+
 const styles = StyleSheet.create({
   header: {
     paddingTop: 30,
@@ -417,7 +462,7 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 
-  // “Combo” tipo segmented control
+  // "Combo" tipo segmented control
   segment: {
     flex: 1,
     flexDirection: "row",
@@ -438,7 +483,7 @@ const styles = StyleSheet.create({
 
   segmentBtnActive: {
     backgroundColor: COLORS.card,
-    // sombra suave para que parezca “seleccionado”
+    // sombra suave para que parezca "seleccionado"
     shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowOffset: { width: 0, height: 3 },
@@ -574,6 +619,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 8,
     elevation: 5,
+  },
+
+  fabLogoutButton: {
+    position: "absolute",
+    bottom: 30,
+    left: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FF4444",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+    zIndex: 100,
   },
 
   // MODAL CREAR CLIENTE
