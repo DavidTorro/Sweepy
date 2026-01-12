@@ -1,16 +1,16 @@
-import Button from "@/components/ui/Button";
-import ClienteCard from "@/components/ui/ClienteCard";
-import SegmentedControl from "@/components/ui/SegmentedControl";
-import SelectButton from "@/components/ui/SelectButton";
-import TextField from "@/components/ui/TextField";
-import { COLORS, FONTS } from "@/utils/theme";
+import Button from "../../components/ui/Button";
+import ClienteCard from "../../components/ui/ClienteCard";
+import SegmentedControl from "../../components/ui/SegmentedControl";
+import SelectButton from "../../components/ui/SelectButton";
+import TextField from "../../components/ui/TextField";
+import { COLORS, FONTS } from "../../utils/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
-import { clientes, loadClientes, createCliente } from "../../../entregas/recursos_aules/types";
+import { clientes, createCliente, loadClientes } from "../../../entregas/recursos_aules/types";
 type SortKey = "nombre" | "id";
 
 export default function AdminPortal() {
@@ -182,29 +182,39 @@ export default function AdminPortal() {
           animationType="fade"
           onRequestClose={() => setFilterVisible(false)}
         >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Buscar por:</Text>
+          <View style={styles.filterModalOverlay}>
+            <TouchableOpacity
+              style={styles.filterModalBackdrop}
+              onPress={() => setFilterVisible(false)}
+              activeOpacity={1}
+            />
+            <View style={styles.filterModalContainer}>
+              <Text style={styles.modalTitle}>Filtros</Text>
               
-              {/* Aquí van los filtros (por ahora solo un ejemplo) */}
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-                <SelectButton
-                  label="Activos"
-                  selected={filters.activos}
-                  onToggle={(v) => setFilters((p) => ({ ...p, activos: v }))}
-                />
+              {/* Filtros organizados en columna */}
+              <View style={styles.filtersColumn}>
+                <View style={styles.filterItemWrapper}>
+                  <Text style={styles.filterLabel}>Estado</Text>
+                  <SelectButton
+                    label="Activos"
+                    selected={filters.activos}
+                    onToggle={(v: boolean) => setFilters((p) => ({ ...p, activos: v }))}
+                  />
+                </View>
 
-                <SelectButton
-                  label="Con email"
-                  selected={filters.conEmail}
-                  onToggle={(v) => setFilters((p) => ({ ...p, conEmail: v }))}
-                />
-
-                <SelectButton
-                  label="Con teléfono"
-                  selected={filters.conTelefono}
-                  onToggle={(v) => setFilters((p) => ({ ...p, conTelefono: v }))}
-                />
+                <View style={styles.filterItemWrapper}>
+                  <Text style={styles.filterLabel}>Contacto</Text>
+                  <SelectButton
+                    label="Con email"
+                    selected={filters.conEmail}
+                    onToggle={(v: boolean) => setFilters((p) => ({ ...p, conEmail: v }))}
+                  />
+                  <SelectButton
+                    label="Con teléfono"
+                    selected={filters.conTelefono}
+                    onToggle={(v: boolean) => setFilters((p) => ({ ...p, conTelefono: v }))}
+                  />
+                </View>
               </View>
 
               <View style={styles.modalActions}>
@@ -246,7 +256,7 @@ export default function AdminPortal() {
         >
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.modalOverlay}
+            style={styles.createModalOverlay}
           >
             <TouchableOpacity
               style={styles.modalBackdrop}
@@ -271,7 +281,7 @@ export default function AdminPortal() {
                     paddingHorizontal: 20,
                   }}
                 >
-                  <Text style={styles.modalTitle}>Crear Cliente</Text>
+                  <Text style={styles.createModalTitle}>Crear Cliente</Text>
                   <TouchableOpacity
                     onPress={() => setCreateModalVisible(false)}
                     style={{
@@ -296,7 +306,7 @@ export default function AdminPortal() {
                     <TextField
                       placeholder="Nombre del cliente"
                       value={newClienteForm.nombre}
-                      onChangeText={(text) =>
+                      onChangeText={(text: string) =>
                         setNewClienteForm((p) => ({ ...p, nombre: text }))
                       }
                       style={{ width: "100%" }}
@@ -308,7 +318,7 @@ export default function AdminPortal() {
                     <TextField
                       placeholder="NIF/CIF"
                       value={newClienteForm.nifCif}
-                      onChangeText={(text) =>
+                      onChangeText={(text: string) =>
                         setNewClienteForm((p) => ({ ...p, nifCif: text }))
                       }
                       style={{ width: "100%" }}
@@ -320,7 +330,7 @@ export default function AdminPortal() {
                     <TextField
                       placeholder="Teléfono"
                       value={newClienteForm.telefono}
-                      onChangeText={(text) =>
+                      onChangeText={(text: string) =>
                         setNewClienteForm((p) => ({ ...p, telefono: text }))
                       }
                       keyboardType="phone-pad"
@@ -333,7 +343,7 @@ export default function AdminPortal() {
                     <TextField
                       placeholder="Email"
                       value={newClienteForm.email}
-                      onChangeText={(text) =>
+                      onChangeText={(text: string) =>
                         setNewClienteForm((p) => ({ ...p, email: text }))
                       }
                       keyboardType="email-address"
@@ -346,7 +356,7 @@ export default function AdminPortal() {
                     <TextField
                       placeholder="Notas adicionales"
                       value={newClienteForm.notas}
-                      onChangeText={(text) =>
+                      onChangeText={(text: string) =>
                         setNewClienteForm((p) => ({ ...p, notas: text }))
                       }
                       multiline
@@ -456,6 +466,58 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
+  filterModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  filterModalBackdrop: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
+
+  filterModalContainer: {
+    width: "80%",
+    backgroundColor: COLORS.card,
+    borderRadius: 20,
+    padding: 16,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 5,
+  },
+
+  filtersColumn: {
+    width: "100%",
+    gap: 8,
+    marginVertical: 12,
+    alignItems: "center",
+  },
+
+  filterItem: {
+    width: "100%",
+    alignItems: "center",
+  },
+
+  filterItemWrapper: {
+    width: "100%",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignItems: "flex-start",
+    gap: 6,
+  },
+
+  filterLabel: {
+    fontFamily: FONTS.bold,
+    fontSize: 12,
+    color: COLORS.textSecondary,
+  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
@@ -515,7 +577,7 @@ const styles = StyleSheet.create({
   },
 
   // MODAL CREAR CLIENTE
-  modalOverlay: {
+  createModalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "flex-end",
@@ -548,7 +610,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 
-  modalTitle: {
+  createModalTitle: {
     fontFamily: FONTS.bold,
     fontSize: 20,
     color: COLORS.text,

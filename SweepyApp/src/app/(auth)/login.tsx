@@ -1,29 +1,30 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-import Button from "../../components/ui/Button";
-import TextField from "../../components/ui/TextField";
-import { APP, ERRORS, ROUTES } from "../../utils/constants";
-import { COLORS, FONTS } from "../../utils/theme";
+import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import SocialButton from "@/components/auth/SocialButton";
+import Button from "@/components/ui/Button";
+import Separator from "@/components/ui/Separator";
+import TextField from "@/components/ui/TextField";
+import { APP, ERRORS, ROUTES } from "@/utils/constants";
+import { COLORS, FONTS } from "@/utils/theme";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [forgotVisible, setForgotVisible] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  // TODO: validar que solo administradores puedan loguearse
   const validateAndRegister = () => {
     let isValid = true;
 
     setEmailError("");
     setPasswordError("");
-    setLoginError("");
 
     if (email.trim() === "") {
       setEmailError(ERRORS.EMAIL_REQUIRED);
@@ -35,25 +36,18 @@ export default function LoginScreen() {
       isValid = false;
     }
 
-    if (password.length < 4) {
-      setPasswordError(ERRORS.PASSWORD_SHORT);
-      isValid = false;
-    }
-
-    if (!isValid) {
-      return;
-    };
+    if (!isValid) return;
 
     // usuario para pruebas:
-    if (email === "Sweepy" && password === "admin1234") {
-      router.replace(ROUTES.ADMIN);
-      return;
-      //TODO ver guardar sesion
-    } else {
-      setLoginError(ERRORS.LOGIN_ERROR);
-    }
+        if (email === "David" && password === "1234") {
+          router.replace(ROUTES.EXPLORAR);
+          return;
+          //TODO ver guardar sesion
+        } else {
+          setLoginError(ERRORS.LOGIN_ERROR);
+        }
 
-    console.log("Admin logeado con éxito:");
+    console.log("Usuario logeado con éxito:");
     console.log("Email:", email);
   };
 
@@ -74,12 +68,12 @@ export default function LoginScreen() {
         >
           {/* Logo */}
           <Image
-            source={require("../../../assets/resources/Sweepy_Admin_Letter.png")}
+            source={require("../../../assets/resources/Sweepy_Letter.png")}
             style={styles.logo}
           />
 
           {/* Título */}
-          <Text style={styles.title}>{APP.NAME} Admin</Text>
+          <Text style={styles.title}>{APP.NAME}</Text>
           <Text style={styles.subtitle}>
             Introduce tus credenciales para continuar
           </Text>
@@ -121,9 +115,6 @@ export default function LoginScreen() {
             {passwordError !== "" && (
               <Text style={styles.errorText}>{passwordError}</Text>
             )}
-            {loginError !== "" && (
-              <Text style={styles.errorText}>{loginError}</Text>
-            )}
 
             {/* BOTÓN LOGIN */}
             <Button
@@ -137,6 +128,41 @@ export default function LoginScreen() {
             />
           </View>
 
+          {/* Separador */}
+          <Separator text="O continúa con" />
+
+          {/* Botón Google */}
+          <SocialButton 
+            style={styles.formButton} 
+            title="Continuar con Google" 
+            onPress={() => console.log("Google login")} 
+          />
+
+          {/* Registro */}
+          <Text style={styles.register}>
+            ¿No tienes una cuenta?{" "}
+            <Link
+              href={ROUTES.REGISTER}
+              style={styles.registerLink}
+            >
+              Regístrate
+            </Link>
+          </Text>
+
+          {/* 
+            Portal para administradores (CRUD DE USUARIOS) 
+            parte independiente a la app  
+          */}
+          <Text style={styles.adminPortal}>
+            Portal para administradores{" "}
+            <Link
+              href={ROUTES.ADMINLOGIN}
+              style={styles.registerLink}
+            >
+              Acceso
+            </Link>
+          </Text>
+          
           {/* MODAL OLVIDAR CONTRASEÑA */}
           <Modal
             visible={forgotVisible}
@@ -148,24 +174,46 @@ export default function LoginScreen() {
               <View style={styles.modalContainer}>
                 <Text style={styles.modalTitle}>Recuperar contraseña</Text>
                 <Text style={styles.modalText}>
-                  Ponte en contacto con el soporte técnico para recuperar tu
-                  contraseña.
+                  Te enviaremos un enlace para restablecer tu contraseña.
                 </Text>
 
-                {/* BOTONES DEL MODAL => TODO mirar de hacerlos en una misma linea los 2 */}
-                <Button
-                  title="Aceptar"
-                  variant="primary"
-                  onPress={() => setForgotVisible(false)}
+                <TextField
+                  placeholder="Tu correo electrónico"
+                  leftIcon="mail-outline"
+                  value={forgotEmail}
+                  onChangeText={setForgotEmail}
+                  style={{ width: "100%", marginTop: 10 }}
                 />
 
-                <Button
-                  title="Cancelar"
-                  variant="outline"
-                  onPress={() => {
-                    setForgotVisible(false);
-                  }}
-                />
+                <View style={styles.modalButtonsContainer}>
+                  <View style={styles.modalButtonWrapper}>
+                    <Button
+                      title="Cancelar"
+                      variant="outline"
+                      onPress={() => {
+                        setForgotEmail("");
+                        setForgotVisible(false);
+                      }}
+                    />
+                  </View>
+                  <View style={styles.modalButtonWrapper}>
+                    <Button
+                      title="Enviar enlace"
+                      variant="primary"
+                      onPress={() => {
+                        Alert.alert(
+                          "Enlace enviado",
+                          `Se ha enviado un correo de recuperación a ${forgotEmail}`
+                        );
+                        console.log(
+                          `Correo de recuperación enviado a: ${forgotEmail}`
+                        );
+                        setForgotEmail("");
+                        setForgotVisible(false);
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
             </View>
           </Modal>
@@ -237,11 +285,28 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
   },
 
+  register: {
+    marginTop: 20,
+    fontFamily: FONTS.regular,
+    color: COLORS.textSecondary,
+  },
+
+  registerLink: {
+    color: COLORS.text,
+    fontFamily: FONTS.semibold,
+  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  adminPortal: {
+    marginTop: 10,
+    fontFamily: FONTS.regular,
+    color: COLORS.textSecondary,
   },
 
   modalContainer: {
@@ -269,5 +334,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textSecondary,
     textAlign: "center",
+  },
+
+  modalButtonsContainer: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 20,
+    width: "100%",
+  },
+
+  modalButtonWrapper: {
+    flex: 1,
   },
 });

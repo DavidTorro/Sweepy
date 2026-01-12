@@ -4,11 +4,11 @@
     "slug": "SweepyApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Sweepy_Logo.png",
+    "icon": "./assets/resources/Sweepy_Logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/Sweepy_Logo.png",
+      "image": "./assets/resources/Sweepy_Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,14 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Sweepy_Logo.png",
+        "foregroundImage": "./assets/resources/Sweepy_Logo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/images/Sweepy_Logo.png"
+      "favicon": "./assets/resources/Sweepy_Logo.png"
     },
     "plugins": [
       "expo-font",

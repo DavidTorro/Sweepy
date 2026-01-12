@@ -2,12 +2,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-import SocialButton from "../../components/auth/SocialButton";
-import Button from "../../components/ui/Button";
-import Separator from "../../components/ui/Separator";
-import TextField from "../../components/ui/TextField";
-import { APP, ERRORS, ROUTES } from "../../utils/constants";
-import { COLORS, FONTS } from "../../utils/theme";
+import SocialButton from "@/components/auth/SocialButton";
+import Button from "@/components/ui/Button";
+import Separator from "@/components/ui/Separator";
+import TextField from "@/components/ui/TextField";
+import { APP, ERRORS, ROUTES } from "@/utils/constants";
+import { COLORS, FONTS } from "@/utils/theme";
   
 export default function RegisterScreen() {
   const [username, setUsername] = useState("");
@@ -111,7 +111,7 @@ export default function RegisterScreen() {
             <TextField
               placeholder="********"
               value={password}
-              onChangeText={(text) => {
+              onChangeText={(text: string) => {
                 setPassword(text);
                 setPasswordError("");
               }}
@@ -129,7 +129,7 @@ export default function RegisterScreen() {
             <TextField
               placeholder="********"
               value={confirmPassword}
-              onChangeText={(text) => {
+              onChangeText={(text: string) => {
                 setConfirmPassword(text);
                 setPasswordError("");
               }}
