@@ -5,19 +5,18 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
 import { clientes, createCliente, loadClientes } from "../../../entregas/recursos_aules/types";
-import RequireAuth from "../../components/auth/RequireAuth";
 import Button from "../../components/ui/Button";
 import ClienteCard from "../../components/ui/ClienteCard";
 import SegmentedControl from "../../components/ui/SegmentedControl";
 import SelectButton from "../../components/ui/SelectButton";
 import TextField from "../../components/ui/TextField";
+import { COLORS, FONTS } from "../../utils/theme";
 import { useAuth } from "../../providers/AuthProvider";
 import { ROUTES } from "../../utils/constants";
-import { COLORS, FONTS } from "../../utils/theme";
 
 type SortKey = "nombre" | "id";
 
-function AdminPortalContent() {
+export default function AdminPortal() {
   const router = useRouter();
   const { logout } = useAuth();
   const [filterVisible, setFilterVisible] = useState(false);
@@ -430,14 +429,6 @@ function AdminPortalContent() {
         </Modal>
       </KeyboardAvoidingView>
     </LinearGradient>
-  );
-}
-
-export default function AdminPortal() {
-  return (
-    <RequireAuth role="admin">
-      <AdminPortalContent />
-    </RequireAuth>
   );
 }
 

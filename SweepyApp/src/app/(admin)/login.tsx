@@ -3,13 +3,14 @@ import TextField from "@/components/ui/TextField";
 import { APP, ERRORS, ROUTES } from "@/utils/constants";
 import { COLORS, FONTS } from "@/utils/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAuth } from "../../providers/AuthProvider";
 
 export default function LoginScreen() {
-  const { logout, loginAdmin } = useAuth();
+  const { logout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +43,7 @@ export default function LoginScreen() {
     );
   };
 
+  // TODO: validar que solo administradores puedan loguearse
   const validateAndRegister = () => {
     let isValid = true;
 
@@ -66,15 +68,19 @@ export default function LoginScreen() {
 
     if (!isValid) {
       return;
-    }
+    };
 
-    // Intentar login de admin
-    const success = loginAdmin(email, password);
-    if (success) {
+    // usuario para pruebas:
+    if (email === "Sweepy" && password === "admin1234") {
       router.replace(ROUTES.ADMIN);
+      return;
+      //TODO ver guardar sesion
     } else {
       setLoginError(ERRORS.LOGIN_ERROR);
     }
+
+    console.log("Admin logeado con éxito:");
+    console.log("Email:", email);
   };
 
   return (
