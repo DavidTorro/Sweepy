@@ -1,12 +1,14 @@
-import { create } from 'zustand';
-import { Cliente } from '@/types/clientes';
-import { mockClientes } from '@/types/mocks/clientesMock';
+import { Cliente } from "@/types/clientes";
+import { mockClientes } from "@/types/mocks/clientesMock";
+import { create } from "zustand";
 
 interface ClientesStore {
   clientes: Cliente[];
   isLoading: boolean;
   error: string | null;
-  crearCliente: (cliente: Omit<Cliente, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  crearCliente: (
+    cliente: Omit<Cliente, "id" | "createdAt" | "updatedAt">,
+  ) => void;
   editarCliente: (id: string, cliente: Partial<Cliente>) => void;
   eliminarCliente: (id: string) => void;
   obtenerClientes: () => Cliente[];
@@ -37,7 +39,7 @@ export const useClientesStore = create<ClientesStore>((set, get) => ({
       clientes: state.clientes.map((cliente) =>
         cliente.id === id
           ? { ...cliente, ...updates, updatedAt: new Date().toISOString() }
-          : cliente
+          : cliente,
       ),
     }));
   },

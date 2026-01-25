@@ -1,6 +1,5 @@
-import { create } from 'zustand';
-import { Perfil } from '@/types/perfiles';
-import { mockPerfiles } from '@/types/mocks/perfilesMock';
+import { Perfil } from "@/types/perfiles";
+import { create } from "zustand";
 
 interface PerfilStore {
   perfil: Perfil | null;
@@ -43,7 +42,9 @@ export const usePerfilStore = create<PerfilStore>((set, get) => ({
     set((state) => {
       if (!state.perfil) return state;
       const totalValoraciones = Math.floor(state.perfil.rating * 5) + 1; // Simulación
-      const newRating = (state.perfil.rating * totalValoraciones + puntos) / (totalValoraciones + 1);
+      const newRating =
+        (state.perfil.rating * totalValoraciones + puntos) /
+        (totalValoraciones + 1);
 
       return {
         perfil: {

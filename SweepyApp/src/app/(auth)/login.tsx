@@ -43,7 +43,8 @@ export default function LoginScreen() {
         await login(data.email, data.password);
         router.replace(ROUTES.EXPLORAR);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : ERRORS.LOGIN_ERROR;
+        const errorMessage =
+          err instanceof Error ? err.message : ERRORS.LOGIN_ERROR;
         setLoginError(errorMessage);
       }
     },

@@ -33,15 +33,17 @@ export default function CrearScreen() {
   const conditions = ["Nuevo", "Como nuevo", "Buen estado", "Aceptable"];
 
   const form = useCreateAnuncioForm({
-    onSubmit: async (data) => {      crearAnuncio({
+    onSubmit: async (data) => {
+      crearAnuncio({
         title: data.title,
         description: data.description,
         price: data.price,
         category: data.category,
         condition: data.condition,
         imagenes: photos,
-        usuarioId: '1', // TODO: obtener del store de auth
-      });      Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
+        usuarioId: "1", // TODO: obtener del store de auth
+      });
+      Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
       form.reset();
       setPhotos([]);
     },

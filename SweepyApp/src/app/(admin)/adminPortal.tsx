@@ -1,6 +1,6 @@
+import { useClientesStore } from "@/stores/clientes.store";
 import { adminPortalStyles } from "@/styles/pages/admin/adminPortalStyles";
 import type { Cliente } from "@/types/clientes";
-import { useClientesStore } from "@/stores/clientes.store";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";

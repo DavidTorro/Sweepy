@@ -1,5 +1,5 @@
-import { User, UserRole } from '@/types/auth';
-import { mockAuthUsers } from '@/types/mocks/authMock';
+import { User, UserRole } from "@/types/auth";
+import { mockAuthUsers } from "@/types/mocks/authMock";
 
 export const authService = {
   // Login
@@ -10,7 +10,7 @@ export const authService = {
     const mockUser = mockAuthUsers[email];
 
     if (!mockUser || mockUser.password !== password) {
-      throw new Error('Email o contraseña incorrectos');
+      throw new Error("Email o contraseña incorrectos");
     }
 
     return mockUser.user;
@@ -23,12 +23,12 @@ export const authService = {
     const mockUser = mockAuthUsers[email];
 
     if (!mockUser || mockUser.password !== password) {
-      throw new Error('Credenciales inválidas');
+      throw new Error("Credenciales inválidas");
     }
 
     // Validar que sea admin
-    if (mockUser.user.role !== 'admin') {
-      throw new Error('Solo administradores pueden acceder aquí');
+    if (mockUser.user.role !== "admin") {
+      throw new Error("Solo administradores pueden acceder aquí");
     }
 
     return mockUser.user;
@@ -38,19 +38,19 @@ export const authService = {
   register: async (
     email: string,
     name: string,
-    password: string
+    password: string,
   ): Promise<User> => {
     await new Promise((resolve) => setTimeout(resolve, 800));
 
     if (mockAuthUsers[email]) {
-      throw new Error('El email ya está registrado');
+      throw new Error("El email ya está registrado");
     }
 
     const newUser: User = {
       id: Math.random().toString(36).substr(2, 9),
       email,
       name,
-      role: 'cliente' as UserRole,
+      role: "cliente" as UserRole,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

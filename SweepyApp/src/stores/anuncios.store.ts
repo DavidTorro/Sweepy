@@ -1,13 +1,15 @@
-import { create } from 'zustand';
-import { Anuncio } from '@/types/anuncios';
-import { mockAnuncios } from '@/types/mocks/anunciosMock';
+import { Anuncio } from "@/types/anuncios";
+import { mockAnuncios } from "@/types/mocks/anunciosMock";
+import { create } from "zustand";
 
 interface AnunciosStore {
   anuncios: Anuncio[];
   filtroCategoria: string | null;
   isLoading: boolean;
   error: string | null;
-  crearAnuncio: (anuncio: Omit<Anuncio, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  crearAnuncio: (
+    anuncio: Omit<Anuncio, "id" | "createdAt" | "updatedAt">,
+  ) => void;
   editarAnuncio: (id: string, anuncio: Partial<Anuncio>) => void;
   eliminarAnuncio: (id: string) => void;
   obtenerAnuncios: () => Anuncio[];
@@ -39,7 +41,7 @@ export const useAnunciosStore = create<AnunciosStore>((set, get) => ({
       anuncios: state.anuncios.map((anuncio) =>
         anuncio.id === id
           ? { ...anuncio, ...updates, updatedAt: new Date().toISOString() }
-          : anuncio
+          : anuncio,
       ),
     }));
   },

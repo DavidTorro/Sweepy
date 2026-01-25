@@ -11,14 +11,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    View,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
 export default function LoginScreen() {
@@ -61,7 +61,8 @@ export default function LoginScreen() {
         await loginAdmin(data.email, data.password);
         router.replace(ROUTES.ADMIN);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : ERRORS.LOGIN_ERROR;
+        const errorMessage =
+          error instanceof Error ? error.message : ERRORS.LOGIN_ERROR;
         setLoginError(errorMessage);
       }
     },

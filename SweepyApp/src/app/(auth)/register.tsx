@@ -12,12 +12,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useState } from "react";
 import {
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    View,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
 export default function RegisterScreen() {
@@ -36,7 +36,8 @@ export default function RegisterScreen() {
         console.log("Usuario:", data.username);
         console.log("Email:", data.email);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Error al registrarse";
+        const errorMessage =
+          err instanceof Error ? err.message : "Error al registrarse";
         setRegisterError(errorMessage);
       }
     },

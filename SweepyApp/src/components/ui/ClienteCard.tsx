@@ -1,6 +1,6 @@
 import { clienteCardStyles } from "@/styles/components/ClienteCardStyles";
-import { ROUTES } from "@/utils/constants/constants";
 import type { Cliente } from "@/types/clientes";
+import { ROUTES } from "@/utils/constants/constants";
 import { router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 

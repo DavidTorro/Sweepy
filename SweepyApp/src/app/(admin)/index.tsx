@@ -2,6 +2,7 @@ import { useCreateClienteForm } from "@/hooks/useCreateClienteForm";
 import { useAuthStore } from "@/stores/auth.store";
 import { useClientesStore } from "@/stores/clientes.store";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
+import type { Cliente } from "@/types/clientes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -17,7 +18,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import type { Cliente } from "@/types/clientes";
 import Button from "../../components/ui/Button";
 import ClienteCard from "../../components/ui/ClienteCard";
 import SegmentedControl from "../../components/ui/SegmentedControl";

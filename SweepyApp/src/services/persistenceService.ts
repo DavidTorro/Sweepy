@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User } from '@/types/auth';
+import { User } from "@/types/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const USER_KEY = 'sweepy_user';
-const TOKEN_KEY = 'sweepy_token';
+const USER_KEY = "sweepy_user";
+const TOKEN_KEY = "sweepy_token";
 
 export const persistenceService = {
   // Guardar usuario
@@ -10,7 +10,7 @@ export const persistenceService = {
     try {
       await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
     } catch (error) {
-      console.error('Error guardando usuario:', error);
+      console.error("Error guardando usuario:", error);
       throw error;
     }
   },
@@ -21,7 +21,7 @@ export const persistenceService = {
       const user = await AsyncStorage.getItem(USER_KEY);
       return user ? JSON.parse(user) : null;
     } catch (error) {
-      console.error('Error obteniendo usuario:', error);
+      console.error("Error obteniendo usuario:", error);
       return null;
     }
   },
@@ -31,7 +31,7 @@ export const persistenceService = {
     try {
       await AsyncStorage.setItem(TOKEN_KEY, token);
     } catch (error) {
-      console.error('Error guardando token:', error);
+      console.error("Error guardando token:", error);
       throw error;
     }
   },
@@ -41,7 +41,7 @@ export const persistenceService = {
     try {
       return await AsyncStorage.getItem(TOKEN_KEY);
     } catch (error) {
-      console.error('Error obteniendo token:', error);
+      console.error("Error obteniendo token:", error);
       return null;
     }
   },
@@ -51,7 +51,7 @@ export const persistenceService = {
     try {
       await AsyncStorage.multiRemove([USER_KEY, TOKEN_KEY]);
     } catch (error) {
-      console.error('Error limpiando almacenamiento:', error);
+      console.error("Error limpiando almacenamiento:", error);
       throw error;
     }
   },

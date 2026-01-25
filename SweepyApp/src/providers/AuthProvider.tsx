@@ -1,8 +1,8 @@
-import React, { createContext, useEffect, useState } from "react";
-import { useAuthStore } from "@/stores/auth.store";
-import { persistenceService } from "@/services/persistenceService";
 import { authService } from "@/services/authService";
+import { persistenceService } from "@/services/persistenceService";
+import { useAuthStore } from "@/stores/auth.store";
 import type { User } from "@/types/auth";
+import React, { createContext, useEffect, useState } from "react";
 
 interface AuthContextType {
   user: User | null;

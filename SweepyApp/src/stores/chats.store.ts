@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { Chat, Message } from '@/types/chats';
-import { mockChats, mockMensajes } from '@/types/mocks/chatsMock';
+import { Chat, Message } from "@/types/chats";
+import { mockChats, mockMensajes } from "@/types/mocks/chatsMock";
+import { create } from "zustand";
 
 interface ChatsStore {
   chats: Chat[];
@@ -61,7 +61,7 @@ export const useChatsStore = create<ChatsStore>((set, get) => ({
       id: Math.random().toString(36).substr(2, 9),
       usuarioId1,
       usuarioId2,
-      lastMessage: '',
+      lastMessage: "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
