@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ZodSchema, ZodError } from "zod";
+import { ZodError, ZodSchema } from "zod";
 
 interface UseFormProps<T> {
   initialValues: T;

@@ -6,21 +6,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
 import {
-    clientes,
-    createCliente,
-    loadClientes,
+  clientes,
+  createCliente,
+  loadClientes,
 } from "../../../entregas/recursos_aules/types";
 import Button from "../../components/ui/Button";
 import ClienteCard from "../../components/ui/ClienteCard";
@@ -340,7 +340,7 @@ export default function AdminPortal() {
                       placeholder="Nombre del cliente"
                       value={form.values.nombre}
                       onChangeText={(text: string) =>
-                        form.setFieldValue('nombre', text)
+                        form.setFieldValue("nombre", text)
                       }
                       style={{ width: "100%" }}
                     />
@@ -355,7 +355,7 @@ export default function AdminPortal() {
                       placeholder="NIF/CIF"
                       value={form.values.nifCif}
                       onChangeText={(text: string) =>
-                        form.setFieldValue('nifCif', text)
+                        form.setFieldValue("nifCif", text)
                       }
                       style={{ width: "100%" }}
                     />
@@ -370,13 +370,15 @@ export default function AdminPortal() {
                       placeholder="Teléfono"
                       value={form.values.telefono}
                       onChangeText={(text: string) =>
-                        form.setFieldValue('telefono', text)
+                        form.setFieldValue("telefono", text)
                       }
                       keyboardType="phone-pad"
                       style={{ width: "100%" }}
                     />
                     {form.errors.telefono && (
-                      <Text style={styles.errorText}>{form.errors.telefono}</Text>
+                      <Text style={styles.errorText}>
+                        {form.errors.telefono}
+                      </Text>
                     )}
                   </View>
 
@@ -386,7 +388,7 @@ export default function AdminPortal() {
                       placeholder="Email"
                       value={form.values.email}
                       onChangeText={(text: string) =>
-                        form.setFieldValue('email', text)
+                        form.setFieldValue("email", text)
                       }
                       keyboardType="email-address"
                       style={{ width: "100%" }}
@@ -402,7 +404,7 @@ export default function AdminPortal() {
                       placeholder="Notas adicionales"
                       value={form.values.notas}
                       onChangeText={(text: string) =>
-                        form.setFieldValue('notas', text)
+                        form.setFieldValue("notas", text)
                       }
                       multiline
                       numberOfLines={4}

@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrearScreen() {
   const [photos, setPhotos] = useState<string[]>([]);
-  
+
   const categories = [
     "Electrónica",
     "Muebles",
@@ -80,10 +80,12 @@ export default function CrearScreen() {
                 placeholder="Ej: iPhone 14 Pro, casi nuevo"
                 placeholderTextColor="#ccc"
                 value={form.values.title}
-                onChangeText={(text) => form.setFieldValue('title', text)}
+                onChangeText={(text) => form.setFieldValue("title", text)}
                 maxLength={50}
               />
-              <Text style={styles.charCount}>{form.values.title.length}/50</Text>
+              <Text style={styles.charCount}>
+                {form.values.title.length}/50
+              </Text>
               {form.errors.title && (
                 <Text style={styles.errorText}>{form.errors.title}</Text>
               )}
@@ -99,13 +101,15 @@ export default function CrearScreen() {
                 placeholder="Describe el estado, características especiales, etc."
                 placeholderTextColor="#ccc"
                 value={form.values.description}
-                onChangeText={(text) => form.setFieldValue('description', text)}
+                onChangeText={(text) => form.setFieldValue("description", text)}
                 multiline
                 numberOfLines={4}
                 maxLength={500}
                 textAlignVertical="top"
               />
-              <Text style={styles.charCount}>{form.values.description.length}/500</Text>
+              <Text style={styles.charCount}>
+                {form.values.description.length}/500
+              </Text>
               {form.errors.description && (
                 <Text style={styles.errorText}>{form.errors.description}</Text>
               )}
@@ -127,14 +131,16 @@ export default function CrearScreen() {
                     key={cat}
                     style={[
                       styles.categoryButton,
-                      form.values.category === cat && styles.categoryButtonSelected,
+                      form.values.category === cat &&
+                        styles.categoryButtonSelected,
                     ]}
-                    onPress={() => form.setFieldValue('category', cat)}
+                    onPress={() => form.setFieldValue("category", cat)}
                   >
                     <Text
                       style={[
                         styles.categoryButtonText,
-                        form.values.category === cat && styles.categoryButtonTextSelected,
+                        form.values.category === cat &&
+                          styles.categoryButtonTextSelected,
                       ]}
                     >
                       {cat}
@@ -158,9 +164,10 @@ export default function CrearScreen() {
                     key={cond}
                     style={[
                       styles.conditionButton,
-                      form.values.condition === cond && styles.conditionButtonSelected,
+                      form.values.condition === cond &&
+                        styles.conditionButtonSelected,
                     ]}
-                    onPress={() => form.setFieldValue('condition', cond)}
+                    onPress={() => form.setFieldValue("condition", cond)}
                   >
                     <Text
                       style={[
@@ -191,7 +198,7 @@ export default function CrearScreen() {
                   placeholder="0.00"
                   placeholderTextColor="#ccc"
                   value={form.values.price}
-                  onChangeText={(text) => form.setFieldValue('price', text)}
+                  onChangeText={(text) => form.setFieldValue("price", text)}
                   keyboardType="decimal-pad"
                 />
               </View>

@@ -4,8 +4,8 @@ import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
 import { useAuth } from "@/hooks/useAuth";
 import { useLoginForm } from "@/hooks/useLoginForm";
-import { useToggle } from "@/hooks/useToggle";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
+import { useToggle } from "@/hooks/useToggle";
 import { loginStyles } from "@/styles/pages/auth/loginStyles";
 import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -13,20 +13,25 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    View,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
 export default function LoginScreen() {
   const { login } = useAuth();
-  const { showPassword, toggleShowPassword, rightIcon } = usePasswordVisibility();
-  const { isVisible: forgotVisible, show: showForgot, hide: hideForgot } = useToggle(false);
+  const { showPassword, toggleShowPassword, rightIcon } =
+    usePasswordVisibility();
+  const {
+    isVisible: forgotVisible,
+    show: showForgot,
+    hide: hideForgot,
+  } = useToggle(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [loginError, setLoginError] = useState("");
 
@@ -76,7 +81,7 @@ export default function LoginScreen() {
             <TextField
               placeholder="nombre@ejemplo.com"
               value={form.values.email}
-              onChangeText={(text) => form.setFieldValue('email', text)}
+              onChangeText={(text) => form.setFieldValue("email", text)}
               leftIcon="mail-outline"
               error={!!form.errors.email}
             />
@@ -89,7 +94,7 @@ export default function LoginScreen() {
             <TextField
               placeholder="********"
               value={form.values.password}
-              onChangeText={(text) => form.setFieldValue('password', text)}
+              onChangeText={(text) => form.setFieldValue("password", text)}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
               rightIcon={rightIcon}

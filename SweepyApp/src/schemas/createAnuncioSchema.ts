@@ -16,12 +16,8 @@ export const createAnuncioSchema = z.object({
       (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
       "El precio debe ser mayor a 0",
     ),
-  category: z
-    .string()
-    .min(1, "Selecciona una categoría"),
-  condition: z
-    .string()
-    .min(1, "Selecciona un estado"),
+  category: z.string().min(1, "Selecciona una categoría"),
+  condition: z.string().min(1, "Selecciona un estado"),
 });
 
 export type CreateAnuncioFormData = z.infer<typeof createAnuncioSchema>;

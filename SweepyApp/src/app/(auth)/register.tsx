@@ -2,8 +2,8 @@ import SocialButton from "@/components/auth/SocialButton";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
-import { useRegisterForm } from "@/hooks/useRegisterForm";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
+import { useRegisterForm } from "@/hooks/useRegisterForm";
 import { registerStyles } from "@/styles/pages/auth/registerStyles";
 import { APP, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -19,7 +19,8 @@ import {
 } from "react-native";
 
 export default function RegisterScreen() {
-  const { showPassword, toggleShowPassword, rightIcon } = usePasswordVisibility();
+  const { showPassword, toggleShowPassword, rightIcon } =
+    usePasswordVisibility();
   const form = useRegisterForm({
     onSubmit: async (data) => {
       console.log("Usuario registrado con éxito:");
@@ -62,7 +63,7 @@ export default function RegisterScreen() {
             <TextField
               placeholder="nombre de usuario"
               value={form.values.username}
-              onChangeText={(text) => form.setFieldValue('username', text)}
+              onChangeText={(text) => form.setFieldValue("username", text)}
               leftIcon="person-outline"
               error={!!form.errors.username}
             />
@@ -77,7 +78,7 @@ export default function RegisterScreen() {
             <TextField
               placeholder="nombre@ejemplo.com"
               value={form.values.email}
-              onChangeText={(text) => form.setFieldValue('email', text)}
+              onChangeText={(text) => form.setFieldValue("email", text)}
               leftIcon="mail-outline"
               error={!!form.errors.email}
             />
@@ -90,7 +91,9 @@ export default function RegisterScreen() {
             <TextField
               placeholder="********"
               value={form.values.password}
-              onChangeText={(text: string) => form.setFieldValue('password', text)}
+              onChangeText={(text: string) =>
+                form.setFieldValue("password", text)
+              }
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
               rightIcon={rightIcon}
@@ -105,7 +108,9 @@ export default function RegisterScreen() {
             <TextField
               placeholder="********"
               value={form.values.confirmPassword}
-              onChangeText={(text: string) => form.setFieldValue('confirmPassword', text)}
+              onChangeText={(text: string) =>
+                form.setFieldValue("confirmPassword", text)
+              }
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
               rightIcon={rightIcon}
