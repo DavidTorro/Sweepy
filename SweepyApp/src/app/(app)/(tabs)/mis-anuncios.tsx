@@ -1,53 +1,32 @@
 import RequireAuth from "@/components/auth/RequireAuth";
+import { useAuthStore } from "@/stores/auth.store";
+import { useAnunciosStore } from "@/stores/anuncios.store";
 import { misAnunciosStyles } from "@/styles/pages/app/misAnunciosStyles";
+import { anunciosService } from "@/services/anunciosService";
 import { ROUTES } from "@/utils/constants/constants";
 import { theme } from "@/utils/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-interface MyAnnouncement {
-  id: string;
-  title: string;
-  price: number;
-  image: string;
-  status: "activo" | "vendido" | "pendiente";
-  views: number;
-  timestamp: string;
-}
-
 export default function MisAnunciosScreen() {
-  const [announcements] = useState<MyAnnouncement[]>([
-    {
-      id: "1",
-      title: "Cámara digital Canon EOS",
-      price: 320,
-      image: "https://via.placeholder.com/150/FF3B30/FFFFFF?text=Cámara",
-      status: "activo",
-      views: 45,
-      timestamp: "hace 2 días",
-    },
-    {
-      id: "2",
-      title: "Patinete eléctrico",
-      price: 180,
-      image: "https://via.placeholder.com/150/34C759/FFFFFF?text=Patinete",
-      status: "vendido",
-      views: 128,
-      timestamp: "hace 1 semana",
-    },
-    {
-      id: "3",
-      title: "Auriculares Sony WH-1000",
-      price: 220,
-      image: "https://via.placeholder.com/150/007AFF/FFFFFF?text=Auriculares",
-      status: "activo",
-      views: 32,
-      timestamp: "hace 5 días",
-    },
-  ]);
+  const { user } = useAuthStore();
+  const { anuncios } = useAnunciosStore();
+
+  const userId = user?.id ?? "1";
+
+  const userAnuncios = useMemo(() => {
+    return anunciosService.getByUserId(anuncios, userId);
+  }, [anuncios, userId]);
+
+  const stats = useMemo(() => {
+    const activos = userAnuncios.length; // no status field; asumimos activos
+    const vendidos = 0;
+    const visitas = userAnuncios.length * 20; // mock placeholder
+    return { activos, vendidos, visitas };
+  }, [userAnuncios]);
 
   return (
     <RequireAuth>
@@ -58,15 +37,15 @@ export default function MisAnunciosScreen() {
             <Text style={styles.headerTitle}>Mis anuncios</Text>
             <View style={styles.stats}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>3</Text>
+                <Text style={styles.statValue}>{stats.activos}</Text>
                 <Text style={styles.statLabel}>Activos</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>1</Text>
+                <Text style={styles.statValue}>{stats.vendidos}</Text>
                 <Text style={styles.statLabel}>Vendidos</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>205</Text>
+                <Text style={styles.statValue}>{stats.visitas}</Text>
                 <Text style={styles.statLabel}>Visitas</Text>
               </View>
             </View>
@@ -74,13 +53,17 @@ export default function MisAnunciosScreen() {
 
           {/* Announcements List */}
           <View style={styles.announcementsList}>
-            {announcements.map((announcement) => (
+            {userAnuncios.map((announcement) => (
               <TouchableOpacity
                 key={announcement.id}
                 style={styles.announcementCard}
               >
                 <Image
-                  source={{ uri: announcement.image }}
+                  source={{
+                    uri:
+                      announcement.imagenes?.[0] ??
+                      "https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Foto",
+                  }}
                   style={styles.announcementImage}
                 />
                 <View style={styles.announcementInfo}>
@@ -92,38 +75,13 @@ export default function MisAnunciosScreen() {
                   </Text>
                   <View style={styles.announcementMeta}>
                     <View style={styles.metaItem}>
-                      <Ionicons name="eye" size={14} color="#999" />
-                      <Text style={styles.metaText}>
-                        {announcement.views} vistas
-                      </Text>
+                      <Ionicons name="pricetag" size={14} color="#999" />
+                      <Text style={styles.metaText}>{announcement.category}</Text>
                     </View>
                     <Text style={styles.metaText}>
-                      {announcement.timestamp}
+                      {new Date(announcement.createdAt).toLocaleDateString()}
                     </Text>
                   </View>
-                </View>
-
-                {/* Status Badge */}
-                <View
-                  style={[
-                    styles.statusBadge,
-                    announcement.status === "activo" && styles.statusActivo,
-                    announcement.status === "vendido" && styles.statusVendido,
-                    announcement.status === "pendiente" &&
-                      styles.statusPendiente,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.statusText,
-                      announcement.status === "activo" &&
-                        styles.statusTexActivo,
-                    ]}
-                  >
-                    {announcement.status === "activo" && "✓ Activo"}
-                    {announcement.status === "vendido" && "✓ Vendido"}
-                    {announcement.status === "pendiente" && "⏳ Pendiente"}
-                  </Text>
                 </View>
 
                 {/* Actions */}
@@ -144,7 +102,7 @@ export default function MisAnunciosScreen() {
           </View>
 
           {/* Empty State Message */}
-          {announcements.length === 0 && (
+          {userAnuncios.length === 0 && (
             <View style={styles.emptyState}>
               <Ionicons name="pricetag-outline" size={64} color="#ccc" />
               <Text style={styles.emptyStateText}>No tienes anuncios aún</Text>

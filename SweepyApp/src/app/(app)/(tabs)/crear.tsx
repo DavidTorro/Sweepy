@@ -1,10 +1,11 @@
 import RequireAuth from "@/components/auth/RequireAuth";
 import { useCreateAnuncioForm } from "@/hooks/useCreateAnuncioForm";
 import { useAnunciosStore } from "@/stores/anuncios.store";
+import { anunciosService } from "@/services/anunciosService";
 import { crearStyles } from "@/styles/pages/app/crearStyles";
 import { theme } from "@/utils/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
     Alert,
     ScrollView,
@@ -17,27 +18,39 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrearScreen() {
   const [photos, setPhotos] = useState<string[]>([]);
-  const { crearAnuncio } = useAnunciosStore();
+  const { crearAnuncio, anuncios } = useAnunciosStore();
 
-  const categories = [
-    "Electrónica",
-    "Muebles",
-    "Ropa",
-    "Deportes",
-    "Libros",
-    "Hogar",
-    "Juguetes",
-    "Otros",
-  ];
+  const categories = useMemo(() => {
+    const cats = anunciosService.getCategories(anuncios);
+    return cats.length ? cats : ["electrónica", "muebles", "otros"];
+  }, [anuncios]);
 
-  const conditions = ["Nuevo", "Como nuevo", "Buen estado", "Aceptable"];
+  const conditions = useMemo(() => {
+    const conds = Array.from(new Set(anuncios.map((a) => a.condition)));
+    return conds.length ? conds : ["excelente", "bueno", "usado"];
+  }, [anuncios]);
 
   const form = useCreateAnuncioForm({
     onSubmit: async (data) => {
+      if (photos.length === 0) {
+        Alert.alert("Añade fotos", "Sube al menos 1 foto (máx 10)");
+        return;
+      }
+      if (photos.length > 10) {
+        Alert.alert("Demasiadas fotos", "Máximo 10 fotos por anuncio");
+        return;
+      }
+
+      const priceNumber = parseFloat(data.price);
+      if (Number.isNaN(priceNumber) || priceNumber <= 0) {
+        form.setFieldError("price", "El precio debe ser mayor a 0");
+        return;
+      }
+
       crearAnuncio({
         title: data.title,
         description: data.description,
-        price: data.price,
+        price: priceNumber,
         category: data.category,
         condition: data.condition,
         imagenes: photos,

@@ -1,34 +1,45 @@
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
+import { useClientesStore } from "@/stores/clientes.store";
 import { adminDetailStyles } from "@/styles/pages/admin/adminDetailStyles";
 import { COLORS } from "@/utils/constants/theme";
+import type { Cliente } from "@/types/clientes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import type { Cliente } from "../../../entregas/recursos_aules/types";
-import {
-    clientes,
-    deleteCliente,
-    loadClientes,
-    updateCliente,
-} from "../../../entregas/recursos_aules/types";
 
 export default function ClienteDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { obtenerClientePorId, editarCliente, eliminarCliente } = useClientesStore();
+
+  const normalizePhone = (phone: string) => phone.replace(/[\s-]/g, "");
+  const isValidPhone = (phone: string) => {
+    const normalized = normalizePhone(phone);
+    if (!normalized) return true;
+    return /^[6789]\d{8}$/.test(normalized);
+  };
+  const isValidNifCif = (value: string) => {
+    const normalized = value.replace(/[\s-]/g, "").toUpperCase();
+    if (!normalized) return true;
+    const nif = /^[0-9]{8}[A-Z]$/;
+    const nie = /^[XYZ][0-9]{7}[A-Z]$/;
+    const cif = /^[ABCDEFGHJNPQRSUVW][0-9]{7}[0-9A-J]$/;
+    return nif.test(normalized) || nie.test(normalized) || cif.test(normalized);
+  };
+
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [allClientes, setAllClientes] = useState<Cliente[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,44 +51,27 @@ export default function ClienteDetailScreen() {
     activo: true,
   });
 
-  // Cargar cliente desde AsyncStorage
-  useEffect(() => {
-    const loadCliente = async () => {
-      try {
-        const loadedClientes = await loadClientes();
-        setAllClientes(loadedClientes);
-
-        const foundCliente = loadedClientes.find((c) => c.id === Number(id));
-        if (foundCliente) {
-          setCliente(foundCliente);
-          setFormData({
-            nombre: foundCliente.nombre,
-            nifCif: foundCliente.nifCif ?? "",
-            telefono: foundCliente.telefono ?? "",
-            email: foundCliente.email ?? "",
-            notas: foundCliente.notas ?? "",
-            activo: foundCliente.activo,
-          });
-        }
-      } catch (error) {
-        console.error("Error cargando cliente:", error);
-        // Fallback
-        const foundCliente = clientes.find((c) => c.id === Number(id));
-        if (foundCliente) {
-          setCliente(foundCliente);
-          setFormData({
-            nombre: foundCliente.nombre,
-            nifCif: foundCliente.nifCif ?? "",
-            telefono: foundCliente.telefono ?? "",
-            email: foundCliente.email ?? "",
-            notas: foundCliente.notas ?? "",
-            activo: foundCliente.activo,
-          });
-        }
-      }
-    };
-    loadCliente();
+  const idStr = useMemo(() => {
+    if (Array.isArray(id)) return id[0];
+    return id ?? "";
   }, [id]);
+
+  // Cargar cliente desde store
+  useEffect(() => {
+    if (!idStr) return;
+    const found = obtenerClientePorId(idStr);
+    if (found) {
+      setCliente(found);
+      setFormData({
+        nombre: found.nombre,
+        nifCif: found.nifCif ?? "",
+        telefono: found.telefono ?? "",
+        email: found.email ?? "",
+        notas: found.notas ?? "",
+        activo: found.activo,
+      });
+    }
+  }, [idStr, obtenerClientePorId]);
 
   const handleEditClose = () => {
     setEditModalVisible(false);
@@ -89,28 +83,45 @@ export default function ClienteDetailScreen() {
       return;
     }
 
+    const emailTrim = formData.email.trim();
+    if (!emailTrim) {
+      Alert.alert("Error", "El email es obligatorio");
+      return;
+    }
+    if (!/.+@.+\..+/.test(emailTrim)) {
+      Alert.alert("Error", "Email inválido");
+      return;
+    }
+
+    const nifTrim = formData.nifCif.trim();
+    const phoneNormalized = normalizePhone(formData.telefono);
+
+    if (nifTrim && !isValidNifCif(nifTrim)) {
+      Alert.alert("Error", "NIF/CIF inválido");
+      return;
+    }
+
+    if (formData.telefono && !isValidPhone(formData.telefono)) {
+      Alert.alert("Error", "Teléfono inválido (9 dígitos, empieza por 6/7/8/9)");
+      return;
+    }
+
     setIsSaving(true);
     try {
       if (!cliente) return;
 
-      const updated = await updateCliente(
-        cliente.id,
-        {
-          nombre: formData.nombre,
-          nifCif: formData.nifCif || undefined,
-          telefono: formData.telefono || undefined,
-          email: formData.email || undefined,
-          notas: formData.notas || undefined,
-          activo: formData.activo,
-        },
-        allClientes,
-      );
+      editarCliente(cliente.id, {
+        nombre: formData.nombre,
+        nifCif: nifTrim ? nifTrim.toUpperCase() : undefined,
+        telefono: phoneNormalized || undefined,
+        email: emailTrim,
+        notas: formData.notas || undefined,
+        activo: formData.activo,
+      });
 
-      setCliente(updated);
-
-      // Recargar la lista de clientes
-      const loadedClientes = await loadClientes();
-      setAllClientes(loadedClientes);
+      // refrescar datos locales desde store
+      const refreshed = obtenerClientePorId(cliente.id);
+      if (refreshed) setCliente(refreshed);
 
       handleEditClose();
       Alert.alert("Éxito", "Cliente actualizado correctamente");
@@ -136,10 +147,10 @@ export default function ClienteDetailScreen() {
         },
         {
           text: "Eliminar",
-          onPress: async () => {
+          onPress: () => {
             setIsDeleting(true);
             try {
-              await deleteCliente(cliente.id, allClientes);
+              eliminarCliente(cliente.id);
               Alert.alert("Éxito", "Cliente eliminado correctamente", [
                 {
                   text: "OK",
@@ -167,7 +178,7 @@ export default function ClienteDetailScreen() {
         end={{ x: 0.5, y: 1 }}
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Text style={{ fontSize: 18, color: COLORS.text }}>Cargando...</Text>
+        <Text style={{ fontSize: 18, color: COLORS.text }}>Cliente no encontrado</Text>
       </LinearGradient>
     );
   }

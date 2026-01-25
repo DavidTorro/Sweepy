@@ -195,15 +195,25 @@ export default function LoginScreen() {
                       title="Enviar enlace"
                       variant="primary"
                       onPress={() => {
-                        Alert.alert(
-                          "Enlace enviado",
-                          `Se ha enviado un correo de recuperación a ${forgotEmail}`,
-                        );
-                        console.log(
-                          `Correo de recuperación enviado a: ${forgotEmail}`,
-                        );
-                        setForgotEmail("");
-                        hideForgot();
+                          const emailTrim = forgotEmail.trim();
+                          if (!emailTrim) {
+                            Alert.alert("Error", "El correo es obligatorio");
+                            return;
+                          }
+                          if (!/.+@.+\..+/.test(emailTrim)) {
+                            Alert.alert("Error", "El correo no es válido");
+                            return;
+                          }
+
+                          Alert.alert(
+                            "Enlace enviado",
+                            `Se ha enviado un correo de recuperación a ${emailTrim}`,
+                          );
+                          console.log(
+                            `Correo de recuperación enviado a: ${emailTrim}`,
+                          );
+                          setForgotEmail("");
+                          hideForgot();
                       }}
                     />
                   </View>

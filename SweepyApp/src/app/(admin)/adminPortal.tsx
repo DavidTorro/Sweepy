@@ -1,6 +1,7 @@
 import { useClientesStore } from "@/stores/clientes.store";
 import { adminPortalStyles } from "@/styles/pages/admin/adminPortalStyles";
 import type { Cliente } from "@/types/clientes";
+import { clientesService } from "@/services/clientesService";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
@@ -27,8 +28,12 @@ export default function AdminPortal() {
   const { clientes, crearCliente, obtenerClientes } = useClientesStore();
   const [filterVisible, setFilterVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [filters, setFilters] = useState({
-    activos: false,
+  const [filters, setFilters] = useState<{
+    estado?: "activos" | "inactivos";
+    conEmail: boolean;
+    conTelefono: boolean;
+  }>({
+    estado: undefined,
     conEmail: false,
     conTelefono: false,
   });
@@ -44,46 +49,85 @@ export default function AdminPortal() {
   });
   const [isCreating, setIsCreating] = useState(false);
 
-  // Filtrar y ordenar
-  const applyFilterAndSort = (list: Cliente[], query: string, key: SortKey) => {
-    const q = query.trim().toLowerCase();
+  const isValidEmail = (email: string) => /.+@.+\..+/.test(email.trim());
+  const normalizePhone = (phone: string) => phone.replace(/[\s-]/g, "");
+  const isValidPhone = (phone: string) => {
+    const normalized = normalizePhone(phone);
+    if (!normalized) return true;
+    return /^[6789]\d{8}$/.test(normalized);
+  };
+  const isValidNifCif = (value: string) => {
+    const normalized = value.replace(/[\s-]/g, "").toUpperCase();
+    if (!normalized) return true;
+    const nif = /^[0-9]{8}[A-Z]$/;
+    const nie = /^[XYZ][0-9]{7}[A-Z]$/;
+    const cif = /^[ABCDEFGHJNPQRSUVW][0-9]{7}[0-9A-J]$/;
+    return nif.test(normalized) || nie.test(normalized) || cif.test(normalized);
+  };
 
-    const filtered = !q
-      ? list
-      : list.filter((c) => {
-          const nombre = c.nombre.toLowerCase();
-          const email = (c.email ?? "").toLowerCase();
-          const telefono = (c.telefono ?? "").toLowerCase();
-          return (
-            nombre.includes(q) || email.includes(q) || telefono.includes(q)
-          );
-        });
+  // Aplicar filtros usando clientesService
+  const applyFilters = (list: Cliente[], query: string, key: SortKey) => {
+    const sortOptions = {
+      key: key as "nombre" | "id",
+      order: "asc" as const,
+    };
 
-    const sorted = [...filtered].sort((a, b) => {
-      if (key === "id") return a.id.localeCompare(b.id);
-      return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }); // ASC
+    const estadoFilter =
+      filters.estado === "activos"
+        ? true
+        : filters.estado === "inactivos"
+          ? false
+          : undefined;
+
+    return clientesService.searchAndSort(list, query, sortOptions, {
+      activos: estadoFilter,
+      conEmail: filters.conEmail,
+      conTelefono: filters.conTelefono,
     });
-
-    return sorted;
   };
 
   useEffect(() => {
-    setClientesList(applyFilterAndSort(clientes, searchText, sortKey));
-  }, [clientes, searchText, sortKey]);
+    setClientesList(applyFilters(clientes, searchText, sortKey));
+  }, [clientes, searchText, sortKey, filters]);
 
   const handleCreateCliente = async () => {
-    if (!newClienteForm.nombre.trim()) {
+    const nombreTrim = newClienteForm.nombre.trim();
+    const emailTrim = newClienteForm.email.trim();
+    const nifTrim = newClienteForm.nifCif.trim();
+    const phoneNormalized = normalizePhone(newClienteForm.telefono);
+
+    if (!nombreTrim) {
       Alert.alert("Error", "El nombre del cliente es obligatorio");
+      return;
+    }
+
+    if (!emailTrim) {
+      Alert.alert("Error", "El email es obligatorio");
+      return;
+    }
+
+    if (!isValidEmail(emailTrim)) {
+      Alert.alert("Error", "Email inválido");
+      return;
+    }
+
+    if (nifTrim && !isValidNifCif(nifTrim)) {
+      Alert.alert("Error", "NIF/CIF inválido");
+      return;
+    }
+
+    if (newClienteForm.telefono && !isValidPhone(newClienteForm.telefono)) {
+      Alert.alert("Error", "Teléfono inválido (9 dígitos, empieza por 6/7/8/9)");
       return;
     }
 
     setIsCreating(true);
     try {
       crearCliente({
-        nombre: newClienteForm.nombre,
-        nifCif: newClienteForm.nifCif || undefined,
-        telefono: newClienteForm.telefono || undefined,
-        email: newClienteForm.email || undefined,
+        nombre: nombreTrim,
+        nifCif: nifTrim ? nifTrim.toUpperCase() : undefined,
+        telefono: phoneNormalized || undefined,
+        email: emailTrim,
         notas: newClienteForm.notas || undefined,
         activo: true,
       });
@@ -174,9 +218,16 @@ export default function AdminPortal() {
                   <Text style={styles.filterLabel}>Estado</Text>
                   <SelectButton
                     label="Activos"
-                    selected={filters.activos}
+                    selected={filters.estado === "activos"}
                     onToggle={(v: boolean) =>
-                      setFilters((p) => ({ ...p, activos: v }))
+                      setFilters((p) => ({ ...p, estado: v ? "activos" : undefined }))
+                    }
+                  />
+                  <SelectButton
+                    label="Inactivos"
+                    selected={filters.estado === "inactivos"}
+                    onToggle={(v: boolean) =>
+                      setFilters((p) => ({ ...p, estado: v ? "inactivos" : undefined }))
                     }
                   />
                 </View>

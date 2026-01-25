@@ -129,11 +129,14 @@ export default function RegisterScreen() {
               leftIcon="lock-closed-outline"
               rightIcon={rightIcon}
               onRightIconPress={toggleShowPassword}
-              error={!!form.errors.password}
+              error={!!form.errors.confirmPassword}
               style={{ marginBottom: 25 }}
             />
 
             {/* MENSAJES DE ERROR */}
+            {form.errors.confirmPassword && (
+              <Text style={styles.errorText}>{form.errors.confirmPassword}</Text>
+            )}
             {form.errors.password && (
               <Text style={styles.errorText}>{form.errors.password}</Text>
             )}

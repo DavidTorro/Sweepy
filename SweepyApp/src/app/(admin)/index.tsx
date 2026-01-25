@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import { useClientesStore } from "@/stores/clientes.store";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
 import type { Cliente } from "@/types/clientes";
+import { clientesService } from "@/services/clientesService";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -34,8 +35,12 @@ export default function AdminPortal() {
   const { clientes, crearCliente, obtenerClientes } = useClientesStore();
   const [filterVisible, setFilterVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [filters, setFilters] = useState({
-    activos: false,
+  const [filters, setFilters] = useState<{
+    estado?: "activos" | "inactivos";
+    conEmail: boolean;
+    conTelefono: boolean;
+  }>({
+    estado: undefined,
     conEmail: false,
     conTelefono: false,
   });
@@ -47,7 +52,7 @@ export default function AdminPortal() {
     onSubmit: async (data) => {
       try {
         crearCliente({
-          nombre: data.nombre,
+          nombre: data.nombre.trim(),
           nifCif: data.nifCif || undefined,
           telefono: data.telefono || undefined,
           email: data.email || undefined,
@@ -67,48 +72,37 @@ export default function AdminPortal() {
     },
   });
 
-  // Inicializar la lista de clientes
-  useEffect(() => {
-    setClientesList(obtenerClientes());
-  }, [clientes, obtenerClientes]);
+  // Aplicar filtros usando clientesService
+  const applyFilters = (list: Cliente[], query: string, key: SortKey) => {
+    const sortOptions = {
+      key: key as "nombre" | "id",
+      order: "asc" as const,
+    };
 
-  // Filtrar y ordenar
-  const applyFilterAndSort = (list: Cliente[], query: string, key: SortKey) => {
-    const q = query.trim().toLowerCase();
+    const estadoFilter =
+      filters.estado === "activos"
+        ? true
+        : filters.estado === "inactivos"
+          ? false
+          : undefined;
 
-    const filtered = !q
-      ? list
-      : list.filter((c) => {
-          const nombre = c.nombre.toLowerCase();
-          const email = (c.email ?? "").toLowerCase();
-          const telefono = (c.telefono ?? "").toLowerCase();
-          return (
-            nombre.includes(q) || email.includes(q) || telefono.includes(q)
-          );
-        });
-
-    const sorted = [...filtered].sort((a, b) => {
-      if (key === "id") return a.id.localeCompare(b.id);
-      return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }); // ASC
+    return clientesService.searchAndSort(list, query, sortOptions, {
+      activos: estadoFilter,
+      conEmail: filters.conEmail,
+      conTelefono: filters.conTelefono,
     });
-
-    return sorted;
   };
 
   useEffect(() => {
-    setClientesList(applyFilterAndSort(clientes, searchText, sortKey));
-  }, [clientes, searchText, sortKey]);
+    setClientesList(applyFilters(clientes, searchText, sortKey));
+  }, [clientes, searchText, sortKey, filters]);
 
   const handleLogout = () => {
     Alert.alert(
       "Cerrar sesión",
       "¿Estás seguro de que deseas cerrar sesión?",
       [
-        {
-          text: "Cancelar",
-          onPress: () => {},
-          style: "cancel",
-        },
+        { text: "Cancelar", onPress: () => {}, style: "cancel" },
         {
           text: "Cerrar sesión",
           onPress: () => {
@@ -190,9 +184,16 @@ export default function AdminPortal() {
                   <Text style={styles.filterLabel}>Estado</Text>
                   <SelectButton
                     label="Activos"
-                    selected={filters.activos}
+                    selected={filters.estado === "activos"}
                     onToggle={(v: boolean) =>
-                      setFilters((p) => ({ ...p, activos: v }))
+                      setFilters((p) => ({ ...p, estado: v ? "activos" : undefined }))
+                    }
+                  />
+                  <SelectButton
+                    label="Inactivos"
+                    selected={filters.estado === "inactivos"}
+                    onToggle={(v: boolean) =>
+                      setFilters((p) => ({ ...p, estado: v ? "inactivos" : undefined }))
                     }
                   />
                 </View>

@@ -22,16 +22,29 @@ export const useClientesStore = create<ClientesStore>((set, get) => ({
   error: null,
 
   crearCliente: (cliente) => {
-    const newCliente: Cliente = {
-      ...cliente,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    if (!cliente.nombre?.trim()) {
+      throw new Error("El nombre es obligatorio");
+    }
 
-    set((state) => ({
-      clientes: [...state.clientes, newCliente],
-    }));
+    set((state) => {
+      const maxId = state.clientes.reduce((max, c) => {
+        const num = Number(c.id);
+        return Number.isFinite(num) ? Math.max(max, num) : max;
+      }, 0);
+
+      const newId = (maxId + 1).toString();
+
+      const newCliente: Cliente = {
+        ...cliente,
+        id: newId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      return {
+        clientes: [...state.clientes, newCliente],
+      };
+    });
   },
 
   editarCliente: (id: string, updates: Partial<Cliente>) => {
