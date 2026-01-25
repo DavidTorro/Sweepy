@@ -1,10 +1,11 @@
-import { useAuth } from "@/hooks/useAuth";
 import { useCreateClienteForm } from "@/hooks/useCreateClienteForm";
+import { useAuthStore } from "@/stores/auth.store";
+import { useClientesStore } from "@/stores/clientes.store";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -16,12 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import type { Cliente } from "../../../entregas/recursos_aules/types";
-import {
-  clientes,
-  createCliente,
-  loadClientes,
-} from "../../../entregas/recursos_aules/types";
+import type { Cliente } from "@/types/clientes";
 import Button from "../../components/ui/Button";
 import ClienteCard from "../../components/ui/ClienteCard";
 import SegmentedControl from "../../components/ui/SegmentedControl";
@@ -34,7 +30,8 @@ type SortKey = "nombre" | "id";
 
 export default function AdminPortal() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout } = useAuthStore();
+  const { clientes, crearCliente, obtenerClientes } = useClientesStore();
   const [filterVisible, setFilterVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [filters, setFilters] = useState({
@@ -44,29 +41,23 @@ export default function AdminPortal() {
   });
   const [searchText, setSearchText] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
-  const [baseClientes, setBaseClientes] = useState<Cliente[]>([]);
   const [clientesList, setClientesList] = useState<Cliente[]>([]);
 
   const form = useCreateClienteForm({
     onSubmit: async (data) => {
       try {
-        const newCliente = await createCliente(
-          {
-            nombre: data.nombre,
-            nifCif: data.nifCif || undefined,
-            telefono: data.telefono || undefined,
-            email: data.email || undefined,
-            notas: data.notas || undefined,
-            activo: true,
-          },
-          baseClientes,
-        );
-
-        // Recargar la lista de clientes
-        await reloadClientes();
+        crearCliente({
+          nombre: data.nombre,
+          nifCif: data.nifCif || undefined,
+          telefono: data.telefono || undefined,
+          email: data.email || undefined,
+          notas: data.notas || undefined,
+          activo: true,
+        });
 
         setCreateModalVisible(false);
         form.reset();
+        setClientesList(obtenerClientes());
 
         Alert.alert("Éxito", "Cliente creado correctamente");
       } catch (error) {
@@ -76,31 +67,10 @@ export default function AdminPortal() {
     },
   });
 
-  // Función para recargar clientes
-  const reloadClientes = useCallback(async () => {
-    try {
-      const loadedClientes = await loadClientes();
-      setBaseClientes(loadedClientes);
-      setClientesList(loadedClientes);
-    } catch (error) {
-      console.error("Error cargando clientes:", error);
-      // Fallback a datos iniciales
-      setBaseClientes(clientes);
-      setClientesList(clientes);
-    }
-  }, []);
-
-  // Cargar clientes al iniciar
+  // Inicializar la lista de clientes
   useEffect(() => {
-    reloadClientes();
-  }, [reloadClientes]);
-
-  // Recargar clientes cuando la pantalla vuelve al foco
-  useFocusEffect(
-    useCallback(() => {
-      reloadClientes();
-    }, [reloadClientes]),
-  );
+    setClientesList(obtenerClientes());
+  }, [clientes, obtenerClientes]);
 
   // Filtrar y ordenar
   const applyFilterAndSort = (list: Cliente[], query: string, key: SortKey) => {
@@ -109,16 +79,16 @@ export default function AdminPortal() {
     const filtered = !q
       ? list
       : list.filter((c) => {
-          const activo = c.activo.toString().toLowerCase();
+          const nombre = c.nombre.toLowerCase();
           const email = (c.email ?? "").toLowerCase();
           const telefono = (c.telefono ?? "").toLowerCase();
           return (
-            activo.includes(q) || email.includes(q) || telefono.includes(q)
+            nombre.includes(q) || email.includes(q) || telefono.includes(q)
           );
         });
 
     const sorted = [...filtered].sort((a, b) => {
-      if (key === "id") return a.id - b.id; // ASC
+      if (key === "id") return a.id.localeCompare(b.id);
       return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }); // ASC
     });
 
@@ -126,8 +96,8 @@ export default function AdminPortal() {
   };
 
   useEffect(() => {
-    setClientesList(applyFilterAndSort(baseClientes, searchText, sortKey));
-  }, [baseClientes, searchText, sortKey]);
+    setClientesList(applyFilterAndSort(clientes, searchText, sortKey));
+  }, [clientes, searchText, sortKey]);
 
   const handleLogout = () => {
     Alert.alert(

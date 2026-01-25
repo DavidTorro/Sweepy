@@ -1,8 +1,8 @@
 import { clienteCardStyles } from "@/styles/components/ClienteCardStyles";
 import { ROUTES } from "@/utils/constants/constants";
+import type { Cliente } from "@/types/clientes";
 import { router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
-import type { Cliente } from "../../../entregas/recursos_aules/types";
 
 interface Props {
   cliente: Cliente;

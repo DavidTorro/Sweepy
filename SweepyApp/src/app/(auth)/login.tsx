@@ -2,10 +2,10 @@ import SocialButton from "@/components/auth/SocialButton";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
-import { useAuth } from "@/hooks/useAuth";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { useToggle } from "@/hooks/useToggle";
+import { useAuthStore } from "@/stores/auth.store";
 import { loginStyles } from "@/styles/pages/auth/loginStyles";
 import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -24,7 +24,7 @@ import {
 } from "react-native";
 
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, isLoading, error, clearError } = useAuthStore();
   const { showPassword, toggleShowPassword, rightIcon } =
     usePasswordVisibility();
   const {
@@ -37,12 +37,14 @@ export default function LoginScreen() {
 
   const form = useLoginForm({
     onSubmit: async (data) => {
+      clearError();
       setLoginError("");
-      const success = login(data.email, data.password);
-      if (success) {
+      try {
+        await login(data.email, data.password);
         router.replace(ROUTES.EXPLORAR);
-      } else {
-        setLoginError(ERRORS.LOGIN_ERROR);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : ERRORS.LOGIN_ERROR;
+        setLoginError(errorMessage);
       }
     },
   });

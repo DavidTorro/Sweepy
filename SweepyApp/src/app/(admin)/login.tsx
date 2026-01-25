@@ -1,9 +1,9 @@
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
-import { useAuth } from "@/hooks/useAuth";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { useToggle } from "@/hooks/useToggle";
+import { useAuthStore } from "@/stores/auth.store";
 import { adminLoginStyles } from "@/styles/pages/auth/adminLoginStyles";
 import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -22,7 +22,7 @@ import {
 } from "react-native";
 
 export default function LoginScreen() {
-  const { logout } = useAuth();
+  const { loginAdmin, isLoading } = useAuthStore();
   const { showPassword, toggleShowPassword, rightIcon } =
     usePasswordVisibility();
   const {
@@ -45,7 +45,6 @@ export default function LoginScreen() {
         {
           text: "Cerrar sesión",
           onPress: () => {
-            logout();
             router.replace(ROUTES.EXPLORAR);
           },
           style: "destructive",
@@ -58,14 +57,13 @@ export default function LoginScreen() {
   const form = useLoginForm({
     onSubmit: async (data) => {
       setLoginError("");
-      // TODO: validar que solo administradores puedan loguearse
-      if (data.email === "Sweepy" && data.password === "admin1234") {
+      try {
+        await loginAdmin(data.email, data.password);
         router.replace(ROUTES.ADMIN);
-      } else {
-        setLoginError(ERRORS.LOGIN_ERROR);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : ERRORS.LOGIN_ERROR;
+        setLoginError(errorMessage);
       }
-      console.log("Admin logeado con éxito:");
-      console.log("Email:", data.email);
     },
   });
 

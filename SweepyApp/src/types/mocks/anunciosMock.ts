@@ -1,0 +1,40 @@
+import { Anuncio } from '@/types/anuncios';
+
+export const mockAnuncios: Anuncio[] = [
+  {
+    id: '1',
+    title: 'iPhone 14 Pro',
+    description: 'iPhone 14 Pro en perfecto estado, sin rayones',
+    price: 800,
+    category: 'electrónica',
+    condition: 'excelente',
+    imagenes: [],
+    usuarioId: '1',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '2',
+    title: 'Mesa de madera',
+    description: 'Mesa de comedor de roble macizo',
+    price: 200,
+    category: 'muebles',
+    condition: 'bueno',
+    imagenes: [],
+    usuarioId: '1',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '3',
+    title: 'Bicicleta montañera',
+    description: 'Bicicleta Scott 2023, 29 pulgadas',
+    price: 450,
+    category: 'deportes',
+    condition: 'bueno',
+    imagenes: [],
+    usuarioId: '2',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];

@@ -4,11 +4,13 @@ import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
+import { useAuthStore } from "@/stores/auth.store";
 import { registerStyles } from "@/styles/pages/auth/registerStyles";
 import { APP, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
+import { useState } from "react";
 import {
     Image,
     KeyboardAvoidingView,
@@ -19,13 +21,24 @@ import {
 } from "react-native";
 
 export default function RegisterScreen() {
+  const { register, isLoading, error, clearError } = useAuthStore();
   const { showPassword, toggleShowPassword, rightIcon } =
     usePasswordVisibility();
+  const [registerError, setRegisterError] = useState("");
+
   const form = useRegisterForm({
     onSubmit: async (data) => {
-      console.log("Usuario registrado con éxito:");
-      console.log("Usuario:", data.username);
-      console.log("Email:", data.email);
+      clearError();
+      setRegisterError("");
+      try {
+        await register(data.email, data.username, data.password);
+        console.log("Usuario registrado con éxito:");
+        console.log("Usuario:", data.username);
+        console.log("Email:", data.email);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Error al registrarse";
+        setRegisterError(errorMessage);
+      }
     },
   });
 

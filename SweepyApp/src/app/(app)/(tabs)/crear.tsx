@@ -1,5 +1,6 @@
 import RequireAuth from "@/components/auth/RequireAuth";
 import { useCreateAnuncioForm } from "@/hooks/useCreateAnuncioForm";
+import { useAnunciosStore } from "@/stores/anuncios.store";
 import { crearStyles } from "@/styles/pages/app/crearStyles";
 import { theme } from "@/utils/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrearScreen() {
   const [photos, setPhotos] = useState<string[]>([]);
+  const { crearAnuncio } = useAnunciosStore();
 
   const categories = [
     "Electrónica",
@@ -31,8 +33,15 @@ export default function CrearScreen() {
   const conditions = ["Nuevo", "Como nuevo", "Buen estado", "Aceptable"];
 
   const form = useCreateAnuncioForm({
-    onSubmit: async (data) => {
-      Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
+    onSubmit: async (data) => {      crearAnuncio({
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        category: data.category,
+        condition: data.condition,
+        imagenes: photos,
+        usuarioId: '1', // TODO: obtener del store de auth
+      });      Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
       form.reset();
       setPhotos([]);
     },
