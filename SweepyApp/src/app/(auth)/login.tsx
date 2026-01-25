@@ -3,12 +3,22 @@ import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
 import { useAuth } from "@/providers/AuthProvider";
-import { APP, ERRORS, ROUTES } from "@/utils/constants";
-import { COLORS, FONTS } from "@/utils/theme";
+import { loginStyles } from "@/styles/pages/auth/loginStyles";
+import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
+import { COLORS } from "@/utils/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    ScrollView,
+    Text,
+    View,
+} from "react-native";
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -131,19 +141,16 @@ export default function LoginScreen() {
           <Separator text="O continúa con" />
 
           {/* Botón Google */}
-          <SocialButton 
-            style={styles.formButton} 
-            title="Continuar con Google" 
-            onPress={() => console.log("Google login")} 
+          <SocialButton
+            style={styles.formButton}
+            title="Continuar con Google"
+            onPress={() => console.log("Google login")}
           />
 
           {/* Registro */}
           <Text style={styles.register}>
             ¿No tienes una cuenta?{" "}
-            <Link
-              href={ROUTES.REGISTER}
-              style={styles.registerLink}
-            >
+            <Link href={ROUTES.REGISTER} style={styles.registerLink}>
               Regístrate
             </Link>
           </Text>
@@ -154,14 +161,11 @@ export default function LoginScreen() {
           */}
           <Text style={styles.adminPortal}>
             Portal para administradores{" "}
-            <Link
-              href={ROUTES.ADMINLOGIN}
-              style={styles.registerLink}
-            >
+            <Link href={ROUTES.ADMINLOGIN} style={styles.registerLink}>
               Acceso
             </Link>
           </Text>
-          
+
           {/* MODAL OLVIDAR CONTRASEÑA */}
           <Modal
             visible={forgotVisible}
@@ -202,10 +206,10 @@ export default function LoginScreen() {
                       onPress={() => {
                         Alert.alert(
                           "Enlace enviado",
-                          `Se ha enviado un correo de recuperación a ${forgotEmail}`
+                          `Se ha enviado un correo de recuperación a ${forgotEmail}`,
                         );
                         console.log(
-                          `Correo de recuperación enviado a: ${forgotEmail}`
+                          `Correo de recuperación enviado a: ${forgotEmail}`,
                         );
                         setForgotEmail("");
                         setForgotVisible(false);
@@ -222,127 +226,4 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    paddingTop: 120,
-  },
-
-  logo: {
-    width: 150,
-    height: 150,
-    resizeMode: "contain",
-  },
-
-  title: {
-    fontFamily: FONTS.bold,
-    fontSize: 40,
-    color: COLORS.text,
-    marginTop: 10,
-  },
-
-  subtitle: {
-    fontFamily: FONTS.regular,
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    marginTop: 6,
-    marginBottom: 30,
-  },
-
-  label: {
-    textAlign: "left",
-    fontFamily: FONTS.semibold,
-    color: COLORS.text,
-    fontSize: 14,
-    width: "85%",
-    paddingBottom: 8,
-  },
-
-  form: {
-    width: "100%",
-    alignItems: "center",
-  },
-
-  forgot: {
-    textAlign: "right",
-    fontFamily: FONTS.regular,
-    color: COLORS.text,
-    marginTop: 8,
-    width: "85%",
-    marginBottom: 25,
-  },
-
-  formButton: {
-    width: "85%",
-  },
-
-  errorText: {
-    width: "85%",
-    color: COLORS.error,
-    marginTop: 8,
-    fontFamily: FONTS.regular,
-  },
-
-  register: {
-    marginTop: 20,
-    fontFamily: FONTS.regular,
-    color: COLORS.textSecondary,
-  },
-
-  registerLink: {
-    color: COLORS.text,
-    fontFamily: FONTS.semibold,
-  },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  adminPortal: {
-    marginTop: 10,
-    fontFamily: FONTS.regular,
-    color: COLORS.textSecondary,
-  },
-
-  modalContainer: {
-    width: "85%",
-    backgroundColor: COLORS.card,
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 5,
-  },
-
-  modalTitle: {
-    fontFamily: FONTS.bold,
-    fontSize: 18,
-    color: COLORS.text,
-    marginBottom: 10,
-  },
-
-  modalText: {
-    fontFamily: FONTS.regular,
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: "center",
-  },
-
-  modalButtonsContainer: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 20,
-    width: "100%",
-  },
-
-  modalButtonWrapper: {
-    flex: 1,
-  },
-});
+const styles = loginStyles;

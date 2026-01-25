@@ -1,10 +1,11 @@
 import Button from "@/components/ui/Button";
-import { ROUTES } from "@/utils/constants";
-import { COLORS } from "@/utils/theme";
+import { notFoundStyles } from "@/styles/pages/notFoundStyles";
+import { ROUTES } from "@/utils/constants/constants";
+import { COLORS } from "@/utils/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { MotiImage } from "moti";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function AdminPortal() {
   return (
@@ -41,7 +42,6 @@ export default function AdminPortal() {
 
         <Text style={styles.title}>
           Página no encontrada.{"\n"} Por favor, vuelve a la página principal.
-
           <Button
             title="Volver a la página principal"
             variant="ghost"
@@ -49,31 +49,11 @@ export default function AdminPortal() {
               router.replace(ROUTES.EXPLORAR);
               console.log("Se ha vuelto a la página principal");
             }}
-            />
+          />
         </Text>
       </View>
     </LinearGradient>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  logo: {
-    width: 350,
-    height: 350,
-    resizeMode: "contain",
-    marginBottom: -80,
-  },
-
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: COLORS.text,
-    textAlign: "center",
-  },
-});
+const styles = notFoundStyles;

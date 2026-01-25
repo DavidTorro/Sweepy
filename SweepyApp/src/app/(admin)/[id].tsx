@@ -1,6 +1,7 @@
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
-import { COLORS, FONTS } from "@/utils/theme";
+import { adminDetailStyles } from "@/styles/pages/admin/adminDetailStyles";
+import { COLORS } from "@/utils/constants/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
@@ -11,13 +12,17 @@ import {
     Modal,
     Platform,
     ScrollView,
-    StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
 } from "react-native";
 import type { Cliente } from "../../../entregas/recursos_aules/types";
-import { clientes, deleteCliente, loadClientes, updateCliente } from "../../../entregas/recursos_aules/types";
+import {
+    clientes,
+    deleteCliente,
+    loadClientes,
+    updateCliente,
+} from "../../../entregas/recursos_aules/types";
 
 export default function ClienteDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -41,7 +46,7 @@ export default function ClienteDetailScreen() {
       try {
         const loadedClientes = await loadClientes();
         setAllClientes(loadedClientes);
-        
+
         const foundCliente = loadedClientes.find((c) => c.id === Number(id));
         if (foundCliente) {
           setCliente(foundCliente);
@@ -55,7 +60,7 @@ export default function ClienteDetailScreen() {
           });
         }
       } catch (error) {
-        console.error('Error cargando cliente:', error);
+        console.error("Error cargando cliente:", error);
         // Fallback
         const foundCliente = clientes.find((c) => c.id === Number(id));
         if (foundCliente) {
@@ -98,11 +103,11 @@ export default function ClienteDetailScreen() {
           notas: formData.notas || undefined,
           activo: formData.activo,
         },
-        allClientes
+        allClientes,
       );
 
       setCliente(updated);
-      
+
       // Recargar la lista de clientes
       const loadedClientes = await loadClientes();
       setAllClientes(loadedClientes);
@@ -150,7 +155,7 @@ export default function ClienteDetailScreen() {
           },
           style: "destructive",
         },
-      ]
+      ],
     );
   };
 
@@ -184,13 +189,11 @@ export default function ClienteDetailScreen() {
             style={styles.backButton}
             onPress={() => router.back()}
           >
-            <Ionicons
-              name="chevron-back"
-              size={28}
-              color={COLORS.text}
-            />
+            <Ionicons name="chevron-back" size={28} color={COLORS.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: COLORS.text }]}>Detalles del Cliente</Text>
+          <Text style={[styles.headerTitle, { color: COLORS.text }]}>
+            Detalles del Cliente
+          </Text>
           <View style={{ width: 44 }} />
         </View>
 
@@ -397,7 +400,9 @@ export default function ClienteDetailScreen() {
                   <TouchableOpacity
                     style={[
                       styles.toggleBtn,
-                      formData.activo ? styles.toggleBtnActive : styles.toggleBtnInactive,
+                      formData.activo
+                        ? styles.toggleBtnActive
+                        : styles.toggleBtnInactive,
                     ]}
                     onPress={() =>
                       setFormData((p) => ({ ...p, activo: !p.activo }))
@@ -446,234 +451,4 @@ export default function ClienteDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 16,
-    paddingHorizontal: 12,
-    paddingBottom: 8,
-  },
-
-  backButton: {
-    width: 44,
-    height: 44,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  headerTitle: {
-    fontFamily: FONTS.bold,
-    fontSize: 18,
-    color: COLORS.text,
-    flex: 1,
-    textAlign: "center",
-  },
-
-  container: {
-    flex: 1,
-  },
-
-  contentContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 30,
-  },
-
-  clienteCard: {
-    backgroundColor: COLORS.card,
-    borderRadius: 18,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 4,
-  },
-
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-
-  clienteName: {
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    color: COLORS.text,
-    flex: 1,
-  },
-
-  estado: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-  },
-
-  activo: {
-    backgroundColor: "rgba(0, 180, 120, 0.2)",
-  },
-
-  inactivo: {
-    backgroundColor: "rgba(220, 50, 50, 0.15)",
-  },
-
-  estadoText: {
-    fontFamily: FONTS.bold,
-    fontSize: 11,
-    color: COLORS.text,
-  },
-
-  infoSection: {
-    marginBottom: 14,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(0,0,0,0.05)",
-  },
-
-  infoLabel: {
-    fontFamily: FONTS.regular,
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    marginBottom: 4,
-  },
-
-  infoValue: {
-    fontFamily: FONTS.bold,
-    fontSize: 16,
-    color: COLORS.text,
-  },
-
-  buttonContainer: {
-    marginHorizontal: 16,
-    marginBottom: 20,
-  },
-
-  // MODAL STYLES
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-end",
-  },
-
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-
-  bottomSheet: {
-    backgroundColor: COLORS.card,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 16,
-    paddingHorizontal: 0,
-    maxHeight: "85%",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: -8 },
-    shadowRadius: 16,
-    elevation: 10,
-    width: "100%",
-  },
-
-  bottomSheetHandle: {
-    width: 50,
-    height: 5,
-    backgroundColor: "rgba(0,0,0,0.25)",
-    borderRadius: 2.5,
-    alignSelf: "center",
-    marginBottom: 12,
-  },
-
-  scrollContent: {
-    paddingBottom: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-  },
-
-  modalTitle: {
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    color: COLORS.text,
-    marginBottom: 16,
-  },
-
-  form: {
-    marginBottom: 12,
-    width: "90%",
-    alignItems: "center",
-    gap: 12,
-  },
-
-  fieldContainer: {
-    width: "92%",
-    maxWidth: 380,
-    alignItems: "flex-start",
-  },
-
-  label: {
-    fontFamily: FONTS.regular,
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    marginBottom: 6,
-  },
-
-  stateToggle: {
-    marginTop: 12,
-    width: "92%",
-    maxWidth: 380,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: 12,
-  },
-
-  toggleBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.1)",
-  },
-
-  toggleBtnActive: {
-    backgroundColor: "rgba(0, 180, 120, 0.2)",
-    borderColor: COLORS.primary,
-  },
-
-  toggleBtnInactive: {
-    backgroundColor: "rgba(220, 50, 50, 0.15)",
-    borderColor: "#dc3232",
-  },
-
-  toggleText: {
-    fontFamily: FONTS.bold,
-    fontSize: 12,
-    color: COLORS.textSecondary,
-  },
-
-  toggleTextActive: {
-    color: COLORS.primary,
-  },
-
-  toggleTextInactive: {
-    color: "#dc3232",
-  },
-
-  formActions: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 20,
-    marginBottom: 20,
-    width: "92%",
-    maxWidth: 380,
-  },
-
-  actionBtn: {
-    flex: 1,
-  },
-});
+const styles = adminDetailStyles;

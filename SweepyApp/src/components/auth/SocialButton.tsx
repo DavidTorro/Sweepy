@@ -1,13 +1,20 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { COLORS, FONTS, SHADOWS, SIZES } from "../../utils/theme";
+import { socialButtonStyles } from "@/styles/components/SocialButtonStyles";
+import {
+    ActivityIndicator,
+    Image,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { COLORS } from "../../utils/constants/theme";
 
 interface SocialButtonProps {
   onPress: () => void;
-  title?: string;        
-  icon?: any;            
+  title?: string;
+  icon?: any;
   loading?: boolean;
   disabled?: boolean;
-  style?: any;          
+  style?: any;
 }
 
 export default function SocialButton({
@@ -22,11 +29,7 @@ export default function SocialButton({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.base,
-        isDisabled && styles.disabled,
-        style,
-      ]}
+      style={[styles.base, isDisabled && styles.disabled, style]}
       activeOpacity={0.7}
       disabled={isDisabled}
       onPress={onPress}
@@ -45,37 +48,4 @@ export default function SocialButton({
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    backgroundColor: COLORS.card,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 999,
-    justifyContent: "center",
-    alignItems: "center",
-    ...SHADOWS.card,
-  },
-
-  content: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  icon: {
-    width: 22,
-    height: 22,
-    resizeMode: "contain",
-    marginRight: 12,
-  },
-
-  text: {
-    fontFamily: FONTS.medium,
-    fontSize: SIZES.medium,
-    color: COLORS.text,
-  },
-
-  disabled: {
-    opacity: 0.4,
-  },
-});
+const styles = socialButtonStyles;

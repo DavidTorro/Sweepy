@@ -1,5 +1,6 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { COLORS, FONTS, SHADOWS, SIZES } from "../../utils/theme";
+import { buttonStyles } from "@/styles/components/ButtonStyles";
+import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { COLORS } from "../../utils/constants/theme";
 
 interface ButtonProps {
   title: string;
@@ -24,8 +25,8 @@ export default function Button({
     variant === "outline"
       ? styles.outlineButton
       : variant === "ghost"
-      ? styles.ghostButton
-      : styles.primaryButton;
+        ? styles.ghostButton
+        : styles.primaryButton;
 
   const textStyle = {
     primary: styles.primaryText,
@@ -35,12 +36,7 @@ export default function Button({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.base,
-        variantStyle,
-        isDisabled && styles.disabled,
-        style,
-      ]}
+      style={[styles.base, variantStyle, isDisabled && styles.disabled, style]}
       activeOpacity={0.7}
       disabled={isDisabled}
       onPress={onPress}
@@ -56,53 +52,4 @@ export default function Button({
   );
 }
 
-const styles = StyleSheet.create({
-  /* --- BASE --- */
-  base: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 999,
-    justifyContent: "center",
-    alignItems: "center",
-    ...SHADOWS.card,
-  },
-
-  /* --- VARIANTES --- */
-  primaryButton: {
-    backgroundColor: COLORS.primary,
-  },
-
-  primaryText: {
-    color: "#fff",
-    fontFamily: FONTS.semibold,
-    fontSize: SIZES.medium,
-  },
-
-  outlineButton: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-  },
-
-  outlineText: {
-    color: COLORS.primary,
-    fontFamily: FONTS.semibold,
-    fontSize: SIZES.medium,
-  },
-
-  ghostButton: {
-    backgroundColor: "transparent",
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-
-  ghostText: {
-    color: COLORS.text,
-    fontFamily: FONTS.semibold,
-    fontSize: 16,
-  },
-
-  disabled: {
-    opacity: 0.4,
-  },
-});
+const styles = buttonStyles;

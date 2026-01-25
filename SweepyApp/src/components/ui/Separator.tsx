@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
-import { COLORS, FONTS, SIZES } from "../../utils/theme";
+import { separatorStyles } from "@/styles/components/SeparatorStyles";
+import { Text, View } from "react-native";
 
 interface SeparatorProps {
-    text?: string;
+  text?: string;
 }
 
 export default function Separator({ text }: SeparatorProps) {
@@ -23,32 +23,4 @@ export default function Separator({ text }: SeparatorProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: "85%",
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 30,
-  },
-   /* Línea partida cuando hay texto */
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.border,
-  },
-
-  /* Texto opcional */
-  text: {
-    marginHorizontal: 12,
-    color: COLORS.textSecondary,
-    fontFamily: FONTS.regular,
-    fontSize: SIZES.medium,
-  },
-
-  /* Línea completa cuando NO hay texto */
-  fullLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.border,
-  },
-});
+const styles = separatorStyles;

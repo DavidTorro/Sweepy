@@ -2,13 +2,21 @@ import SocialButton from "@/components/auth/SocialButton";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
-import { APP, ERRORS, ROUTES } from "@/utils/constants";
-import { COLORS, FONTS } from "@/utils/theme";
+import { registerStyles } from "@/styles/pages/auth/registerStyles";
+import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
+import { COLORS } from "@/utils/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-  
+import {
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    View,
+} from "react-native";
+
 export default function RegisterScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -168,10 +176,10 @@ export default function RegisterScreen() {
           <Separator text="O continúa con" />
 
           {/* Botón Google */}
-          <SocialButton 
-            style={styles.formButton} 
-            title="Continuar con Google" 
-            onPress={() => console.log("Google register")} 
+          <SocialButton
+            style={styles.formButton}
+            title="Continuar con Google"
+            onPress={() => console.log("Google register")}
           />
           {/* Ir a login */}
           <Text style={styles.login}>
@@ -186,68 +194,4 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    alignItems: "center",
-    paddingTop: 120,
-    paddingBottom: 50,
-  },
-
-  logo: {
-    width: 150,
-    height: 150,
-    resizeMode: "contain",
-  },
-
-  title: {
-    fontFamily: FONTS.bold,
-    fontSize: 40,
-    color: COLORS.text,
-    marginTop: 10,
-  },
-
-  subtitle: {
-    fontFamily: FONTS.regular,
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    marginTop: 6,
-    marginBottom: 30,
-  },
-
-  label: {
-    textAlign: "left",
-    fontFamily: FONTS.semibold,
-    color: COLORS.text,
-    fontSize: 14,
-    width: "85%",
-    paddingBottom: 8,
-  },
-
-  formButton: {
-    width: "85%",
-  },
-
-  form: {
-    width: "100%",
-    alignItems: "center",
-  },
-
-  errorText: {
-    width: "85%",
-    color: COLORS.error,
-    marginTop: 8,
-    fontFamily: FONTS.regular,
-  },
-
-  login: {
-    marginTop: 20,
-    fontFamily: FONTS.regular,
-    color: COLORS.textSecondary,
-  },
-
-  loginLink: {
-    color: COLORS.text,
-    fontFamily: FONTS.semibold,
-  },
-});
+const styles = registerStyles;

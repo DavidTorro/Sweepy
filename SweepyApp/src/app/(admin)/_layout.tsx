@@ -1,5 +1,5 @@
-import { COLORS, FONTS } from '@/utils/theme';
-import { Stack } from 'expo-router';
+import { COLORS, FONTS } from "@/utils/constants/theme";
+import { Stack } from "expo-router";
 
 export default function AdminLayout() {
   return (
@@ -9,12 +9,12 @@ export default function AdminLayout() {
         headerStyle: {
           backgroundColor: COLORS.primary,
         },
-        headerTintColor: '#fff',
+        headerTintColor: "#fff",
         headerTitleStyle: {
           fontFamily: FONTS.bold,
           fontSize: 18,
         },
-        headerTitle: 'Administración',
+        headerTitle: "Administración",
         headerBackVisible: false,
       }}
     >

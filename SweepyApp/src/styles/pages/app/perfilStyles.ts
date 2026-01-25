@@ -1,0 +1,159 @@
+import { theme } from "@/utils/constants/theme";
+import { StyleSheet } from "react-native";
+
+export const perfilStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f9f9f9",
+  },
+  profileHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    padding: 16,
+    gap: 12,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#f0f0f0",
+  },
+  profileInfo: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 2,
+  },
+  userHandle: {
+    fontSize: 13,
+    color: "#999",
+    marginBottom: 6,
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  rating: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#333",
+  },
+  reviews: {
+    fontSize: 13,
+    color: "#999",
+  },
+  editButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+    gap: 8,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 12,
+    alignItems: "center",
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.05,
+    shadowRadius: 1,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: theme.colors.primary,
+  },
+  statLabel: {
+    fontSize: 11,
+    color: "#999",
+    marginTop: 4,
+    textAlign: "center",
+  },
+  descriptionContainer: {
+    backgroundColor: "white",
+    marginHorizontal: 8,
+    marginBottom: 12,
+    borderRadius: 12,
+    padding: 16,
+  },
+  descriptionTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 13,
+    color: "#666",
+    lineHeight: 18,
+  },
+  menuContainer: {
+    backgroundColor: "white",
+    marginHorizontal: 8,
+    marginBottom: 12,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  menuItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  menuItemLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
+  menuItemLabel: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#333",
+  },
+  menuItemRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  badge: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FF3B30",
+  },
+  versionInfo: {
+    alignItems: "center",
+    paddingVertical: 24,
+    marginBottom: 40,
+  },
+  versionText: {
+    fontSize: 13,
+    color: "#999",
+    fontWeight: "500",
+  },
+  versionSubtext: {
+    fontSize: 11,
+    color: "#ccc",
+    marginTop: 4,
+  },
+});
