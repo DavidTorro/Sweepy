@@ -2,12 +2,13 @@ import SocialButton from "@/components/auth/SocialButton";
 import Button from "@/components/ui/Button";
 import Separator from "@/components/ui/Separator";
 import TextField from "@/components/ui/TextField";
+import { useRegisterForm } from "@/hooks/useRegisterForm";
+import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { registerStyles } from "@/styles/pages/auth/registerStyles";
-import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
+import { APP, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
-import { useState } from "react";
 import {
     Image,
     KeyboardAvoidingView,
@@ -18,50 +19,14 @@ import {
 } from "react-native";
 
 export default function RegisterScreen() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  // --- VALIDACIÓN ---
-  const validateAndRegister = () => {
-    let isValid = true;
-
-    setUsernameError("");
-    setEmailError("");
-    setPasswordError("");
-
-    if (username.trim() === "") {
-      setUsernameError(ERRORS.USERNAME_REQUIRED);
-      isValid = false;
-    }
-
-    if (email.trim() === "") {
-      setEmailError(ERRORS.EMAIL_REQUIRED);
-      isValid = false;
-    }
-
-    if (password.length < 3) {
-      setPasswordError(ERRORS.PASSWORD_SHORT);
-      isValid = false;
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordError(ERRORS.PASSWORD_MISMATCH);
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    console.log("Usuario registrado con éxito:");
-    console.log("Usuario:", username);
-    console.log("Email:", email);
-  };
+  const { showPassword, toggleShowPassword, rightIcon } = usePasswordVisibility();
+  const form = useRegisterForm({
+    onSubmit: async (data) => {
+      console.log("Usuario registrado con éxito:");
+      console.log("Usuario:", data.username);
+      console.log("Email:", data.email);
+    },
+  });
 
   return (
     <LinearGradient
@@ -96,11 +61,14 @@ export default function RegisterScreen() {
 
             <TextField
               placeholder="nombre de usuario"
-              value={username}
-              onChangeText={setUsername}
+              value={form.values.username}
+              onChangeText={(text) => form.setFieldValue('username', text)}
               leftIcon="person-outline"
-              error={!!usernameError}
+              error={!!form.errors.username}
             />
+            {form.errors.username && (
+              <Text style={styles.errorText}>{form.errors.username}</Text>
+            )}
 
             <Text style={[styles.label, { marginTop: 10 }]}>
               Correo electrónico
@@ -108,26 +76,26 @@ export default function RegisterScreen() {
 
             <TextField
               placeholder="nombre@ejemplo.com"
-              value={email}
-              onChangeText={setEmail}
+              value={form.values.email}
+              onChangeText={(text) => form.setFieldValue('email', text)}
               leftIcon="mail-outline"
-              error={!!emailError}
+              error={!!form.errors.email}
             />
+            {form.errors.email && (
+              <Text style={styles.errorText}>{form.errors.email}</Text>
+            )}
 
             <Text style={[styles.label, { marginTop: 10 }]}>Contraseña</Text>
 
             <TextField
               placeholder="********"
-              value={password}
-              onChangeText={(text: string) => {
-                setPassword(text);
-                setPasswordError("");
-              }}
+              value={form.values.password}
+              onChangeText={(text: string) => form.setFieldValue('password', text)}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
-              rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
-              onRightIconPress={() => setShowPassword(!showPassword)}
-              error={!!passwordError}
+              rightIcon={rightIcon}
+              onRightIconPress={toggleShowPassword}
+              error={!!form.errors.password}
             />
 
             <Text style={[styles.label, { marginTop: 10 }]}>
@@ -136,39 +104,28 @@ export default function RegisterScreen() {
 
             <TextField
               placeholder="********"
-              value={confirmPassword}
-              onChangeText={(text: string) => {
-                setConfirmPassword(text);
-                setPasswordError("");
-              }}
+              value={form.values.confirmPassword}
+              onChangeText={(text: string) => form.setFieldValue('confirmPassword', text)}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
-              rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
-              onRightIconPress={() => setShowPassword(!showPassword)}
-              error={!!passwordError}
+              rightIcon={rightIcon}
+              onRightIconPress={toggleShowPassword}
+              error={!!form.errors.password}
               style={{ marginBottom: 25 }}
             />
 
             {/* MENSAJES DE ERROR */}
-            {usernameError !== "" && (
-              <Text style={styles.errorText}>{usernameError}</Text>
-            )}
-            {emailError !== "" && (
-              <Text style={styles.errorText}>{emailError}</Text>
-            )}
-            {passwordError !== "" && (
-              <Text style={styles.errorText}>{passwordError}</Text>
+            {form.errors.password && (
+              <Text style={styles.errorText}>{form.errors.password}</Text>
             )}
 
             {/* BOTÓN REGISTER */}
             <Button
               style={styles.formButton}
-              title="Registrarse"
+              title={form.isSubmitting ? "Registrando..." : "Registrarse"}
               variant="primary"
-              onPress={() => {
-                validateAndRegister();
-                console.log("register");
-              }}
+              onPress={form.handleSubmit}
+              disabled={form.isSubmitting}
             />
           </View>
 

@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const adminLoginSchema = z.object({
   email: z
-    .string("El correo es obligatorio")
+    .string()
     .min(1, "El correo es obligatorio"),
   password: z
-    .string("La contraseña es obligatoria")
+    .string()
     .min(1, "La contraseña es obligatoria")
     .min(4, "La contraseña debe tener al menos 4 caracteres"),
 });

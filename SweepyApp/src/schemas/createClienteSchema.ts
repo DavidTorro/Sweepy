@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const createClienteSchema = z.object({
   nombre: z
-    .string("El nombre es obligatorio")
+    .string()
     .min(1, "El nombre es obligatorio")
     .min(2, "El nombre debe tener al menos 2 caracteres"),
   nifCif: z

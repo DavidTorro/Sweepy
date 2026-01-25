@@ -1,6 +1,9 @@
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
 import { useAuth } from "@/hooks/useAuth";
+import { useLoginForm } from "@/hooks/useLoginForm";
+import { useToggle } from "@/hooks/useToggle";
+import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { adminLoginStyles } from "@/styles/pages/auth/adminLoginStyles";
 import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -20,13 +23,8 @@ import {
 
 export default function LoginScreen() {
   const { logout } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [forgotVisible, setForgotVisible] = useState(false);
-
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const { showPassword, toggleShowPassword, rightIcon } = usePasswordVisibility();
+  const { isVisible: forgotVisible, show: showForgot, hide: hideForgot } = useToggle(false);
   const [loginError, setLoginError] = useState("");
 
   const handleLogout = () => {
@@ -52,45 +50,19 @@ export default function LoginScreen() {
     );
   };
 
-  // TODO: validar que solo administradores puedan loguearse
-  const validateAndRegister = () => {
-    let isValid = true;
-
-    setEmailError("");
-    setPasswordError("");
-    setLoginError("");
-
-    if (email.trim() === "") {
-      setEmailError(ERRORS.EMAIL_REQUIRED);
-      isValid = false;
-    }
-
-    if (password.trim() === "") {
-      setPasswordError(ERRORS.PASSWORD_REQUIRED);
-      isValid = false;
-    }
-
-    if (password.length < 4) {
-      setPasswordError(ERRORS.PASSWORD_SHORT);
-      isValid = false;
-    }
-
-    if (!isValid) {
-      return;
-    }
-
-    // usuario para pruebas:
-    if (email === "Sweepy" && password === "admin1234") {
-      router.replace(ROUTES.ADMIN);
-      return;
-      //TODO ver guardar sesion
-    } else {
-      setLoginError(ERRORS.LOGIN_ERROR);
-    }
-
-    console.log("Admin logeado con éxito:");
-    console.log("Email:", email);
-  };
+  const form = useLoginForm({
+    onSubmit: async (data) => {
+      setLoginError("");
+      // TODO: validar que solo administradores puedan loguearse
+      if (data.email === "Sweepy" && data.password === "admin1234") {
+        router.replace(ROUTES.ADMIN);
+      } else {
+        setLoginError(ERRORS.LOGIN_ERROR);
+      }
+      console.log("Admin logeado con éxito:");
+      console.log("Email:", data.email);
+    },
+  });
 
   return (
     <LinearGradient
@@ -125,37 +97,37 @@ export default function LoginScreen() {
 
             <TextField
               placeholder="nombre@ejemplo.com"
-              value={email}
-              onChangeText={setEmail}
+              value={form.values.email}
+              onChangeText={(text) => form.setFieldValue('email', text)}
               leftIcon="mail-outline"
-              error={!!emailError}
+              error={!!form.errors.email}
             />
+            {form.errors.email && (
+              <Text style={styles.errorText}>{form.errors.email}</Text>
+            )}
 
             <Text style={[styles.label, { marginTop: 20 }]}>Contraseña</Text>
 
             <TextField
               placeholder="********"
-              value={password}
-              onChangeText={setPassword}
+              value={form.values.password}
+              onChangeText={(text) => form.setFieldValue('password', text)}
               secureTextEntry={!showPassword}
               leftIcon="lock-closed-outline"
-              rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
-              onRightIconPress={() => setShowPassword(!showPassword)}
-              error={!!passwordError}
+              rightIcon={rightIcon}
+              onRightIconPress={toggleShowPassword}
+              error={!!form.errors.password}
             />
+            {form.errors.password && (
+              <Text style={styles.errorText}>{form.errors.password}</Text>
+            )}
 
             {/* Olvidaste tu contraseña */}
-            <Text style={styles.forgot} onPress={() => setForgotVisible(true)}>
+            <Text style={styles.forgot} onPress={showForgot}>
               ¿Olvidaste tu contraseña?
             </Text>
 
             {/* MENSAJES DE ERROR */}
-            {emailError !== "" && (
-              <Text style={styles.errorText}>{emailError}</Text>
-            )}
-            {passwordError !== "" && (
-              <Text style={styles.errorText}>{passwordError}</Text>
-            )}
             {loginError !== "" && (
               <Text style={styles.errorText}>{loginError}</Text>
             )}
@@ -163,12 +135,10 @@ export default function LoginScreen() {
             {/* BOTÓN LOGIN */}
             <Button
               style={styles.formButton}
-              title="Iniciar sesión"
+              title={form.isSubmitting ? "Iniciando..." : "Iniciar sesión"}
               variant="primary"
-              onPress={() => {
-                validateAndRegister();
-                console.log("login");
-              }}
+              onPress={form.handleSubmit}
+              disabled={form.isSubmitting}
             />
           </View>
 
@@ -188,7 +158,7 @@ export default function LoginScreen() {
             visible={forgotVisible}
             transparent
             animationType="fade"
-            onRequestClose={() => setForgotVisible(false)}
+            onRequestClose={hideForgot}
           >
             <View style={styles.modalOverlay}>
               <View style={styles.modalContainer}>
@@ -203,16 +173,14 @@ export default function LoginScreen() {
                     <Button
                       title="Cancelar"
                       variant="outline"
-                      onPress={() => {
-                        setForgotVisible(false);
-                      }}
+                      onPress={hideForgot}
                     />
                   </View>
                   <View style={styles.modalButtonWrapper}>
                     <Button
                       title="Aceptar"
                       variant="primary"
-                      onPress={() => setForgotVisible(false)}
+                      onPress={hideForgot}
                     />
                   </View>
                 </View>

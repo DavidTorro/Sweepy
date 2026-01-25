@@ -1,4 +1,5 @@
 import RequireAuth from "@/components/auth/RequireAuth";
+import { useCreateAnuncioForm } from "@/hooks/useCreateAnuncioForm";
 import { crearStyles } from "@/styles/pages/app/crearStyles";
 import { theme } from "@/utils/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,12 +15,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CrearScreen() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-  const [condition, setCondition] = useState<string | null>(null);
-
+  const [photos, setPhotos] = useState<string[]>([]);
+  
   const categories = [
     "Electrónica",
     "Muebles",
@@ -33,20 +30,13 @@ export default function CrearScreen() {
 
   const conditions = ["Nuevo", "Como nuevo", "Buen estado", "Aceptable"];
 
-  const handlePublish = () => {
-    if (!title.trim() || !price.trim() || !category || !condition) {
-      Alert.alert("Error", "Por favor completa todos los campos obligatorios");
-      return;
-    }
-
-    Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
-    // Aquí irían las acciones para publicar
-    setTitle("");
-    setDescription("");
-    setPrice("");
-    setCategory(null);
-    setCondition(null);
-  };
+  const form = useCreateAnuncioForm({
+    onSubmit: async (data) => {
+      Alert.alert("✓ Éxito", "Tu anuncio ha sido publicado correctamente");
+      form.reset();
+      setPhotos([]);
+    },
+  });
 
   return (
     <RequireAuth>
@@ -89,11 +79,14 @@ export default function CrearScreen() {
                 style={styles.input}
                 placeholder="Ej: iPhone 14 Pro, casi nuevo"
                 placeholderTextColor="#ccc"
-                value={title}
-                onChangeText={setTitle}
+                value={form.values.title}
+                onChangeText={(text) => form.setFieldValue('title', text)}
                 maxLength={50}
               />
-              <Text style={styles.charCount}>{title.length}/50</Text>
+              <Text style={styles.charCount}>{form.values.title.length}/50</Text>
+              {form.errors.title && (
+                <Text style={styles.errorText}>{form.errors.title}</Text>
+              )}
             </View>
 
             {/* Descripción */}
@@ -105,14 +98,17 @@ export default function CrearScreen() {
                 style={[styles.input, styles.textArea]}
                 placeholder="Describe el estado, características especiales, etc."
                 placeholderTextColor="#ccc"
-                value={description}
-                onChangeText={setDescription}
+                value={form.values.description}
+                onChangeText={(text) => form.setFieldValue('description', text)}
                 multiline
                 numberOfLines={4}
                 maxLength={500}
                 textAlignVertical="top"
               />
-              <Text style={styles.charCount}>{description.length}/500</Text>
+              <Text style={styles.charCount}>{form.values.description.length}/500</Text>
+              {form.errors.description && (
+                <Text style={styles.errorText}>{form.errors.description}</Text>
+              )}
             </View>
 
             {/* Categoría */}
@@ -131,14 +127,14 @@ export default function CrearScreen() {
                     key={cat}
                     style={[
                       styles.categoryButton,
-                      category === cat && styles.categoryButtonSelected,
+                      form.values.category === cat && styles.categoryButtonSelected,
                     ]}
-                    onPress={() => setCategory(cat)}
+                    onPress={() => form.setFieldValue('category', cat)}
                   >
                     <Text
                       style={[
                         styles.categoryButtonText,
-                        category === cat && styles.categoryButtonTextSelected,
+                        form.values.category === cat && styles.categoryButtonTextSelected,
                       ]}
                     >
                       {cat}
@@ -146,6 +142,9 @@ export default function CrearScreen() {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+              {form.errors.category && (
+                <Text style={styles.errorText}>{form.errors.category}</Text>
+              )}
             </View>
 
             {/* Estado */}
@@ -159,14 +158,14 @@ export default function CrearScreen() {
                     key={cond}
                     style={[
                       styles.conditionButton,
-                      condition === cond && styles.conditionButtonSelected,
+                      form.values.condition === cond && styles.conditionButtonSelected,
                     ]}
-                    onPress={() => setCondition(cond)}
+                    onPress={() => form.setFieldValue('condition', cond)}
                   >
                     <Text
                       style={[
                         styles.conditionButtonText,
-                        condition === cond &&
+                        form.values.condition === cond &&
                           styles.conditionButtonTextSelected,
                       ]}
                     >
@@ -175,6 +174,9 @@ export default function CrearScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
+              {form.errors.condition && (
+                <Text style={styles.errorText}>{form.errors.condition}</Text>
+              )}
             </View>
 
             {/* Precio */}
@@ -188,11 +190,14 @@ export default function CrearScreen() {
                   style={styles.priceInput}
                   placeholder="0.00"
                   placeholderTextColor="#ccc"
-                  value={price}
-                  onChangeText={setPrice}
+                  value={form.values.price}
+                  onChangeText={(text) => form.setFieldValue('price', text)}
                   keyboardType="decimal-pad"
                 />
               </View>
+              {form.errors.price && (
+                <Text style={styles.errorText}>{form.errors.price}</Text>
+              )}
             </View>
 
             {/* Ubicación */}
@@ -212,9 +217,12 @@ export default function CrearScreen() {
             <View style={styles.actionsContainer}>
               <TouchableOpacity
                 style={styles.publishButton}
-                onPress={handlePublish}
+                onPress={form.handleSubmit}
+                disabled={form.isSubmitting}
               >
-                <Text style={styles.publishButtonText}>Publicar anuncio</Text>
+                <Text style={styles.publishButtonText}>
+                  {form.isSubmitting ? "Publicando..." : "Publicar anuncio"}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.draftButton}>
                 <Text style={styles.draftButtonText}>

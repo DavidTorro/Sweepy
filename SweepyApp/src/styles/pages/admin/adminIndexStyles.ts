@@ -256,6 +256,13 @@ export const adminIndexStyles = StyleSheet.create({
     marginBottom: 6,
   },
 
+  errorText: {
+    color: COLORS.error,
+    fontFamily: FONTS.regular,
+    fontSize: 12,
+    marginTop: 4,
+  },
+
   formActions: {
     flexDirection: "row",
     gap: 10,

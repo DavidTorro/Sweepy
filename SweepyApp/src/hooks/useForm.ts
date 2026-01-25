@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ZodSchema } from "zod";
+import { ZodSchema, ZodError } from "zod";
 
 interface UseFormProps<T> {
   initialValues: T;
@@ -113,18 +113,18 @@ export function useForm<T extends Record<string, any>>({
         try {
           await schema.parseAsync(values);
           clearErrors();
-        } catch (error: any) {
-          const fieldErrors: Record<keyof T, string> = {} as Record<
-            keyof T,
-            string
-          >;
-          if (error.errors) {
-            error.errors.forEach((err: any) => {
-              const field = err.path[0] as keyof T;
-              fieldErrors[field] = err.message;
+        } catch (error) {
+          if (error instanceof ZodError) {
+            const fieldErrors: Record<keyof T, string> = {} as Record<
+              keyof T,
+              string
+            >;
+            error.issues.forEach((issue) => {
+              const field = issue.path[0] as keyof T;
+              fieldErrors[field] = issue.message;
             });
+            setErrors(fieldErrors);
           }
-          setErrors(fieldErrors);
           setIsSubmitting(false);
           return;
         }

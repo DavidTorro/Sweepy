@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useCreateClienteForm } from "@/hooks/useCreateClienteForm";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -45,14 +46,35 @@ export default function AdminPortal() {
   const [sortKey, setSortKey] = useState<SortKey>("nombre");
   const [baseClientes, setBaseClientes] = useState<Cliente[]>([]);
   const [clientesList, setClientesList] = useState<Cliente[]>([]);
-  const [newClienteForm, setNewClienteForm] = useState({
-    nombre: "",
-    nifCif: "",
-    telefono: "",
-    email: "",
-    notas: "",
+
+  const form = useCreateClienteForm({
+    onSubmit: async (data) => {
+      try {
+        const newCliente = await createCliente(
+          {
+            nombre: data.nombre,
+            nifCif: data.nifCif || undefined,
+            telefono: data.telefono || undefined,
+            email: data.email || undefined,
+            notas: data.notas || undefined,
+            activo: true,
+          },
+          baseClientes,
+        );
+
+        // Recargar la lista de clientes
+        await reloadClientes();
+
+        setCreateModalVisible(false);
+        form.reset();
+
+        Alert.alert("Éxito", "Cliente creado correctamente");
+      } catch (error) {
+        console.error("Error creando cliente:", error);
+        Alert.alert("Error", "No se pudo crear el cliente");
+      }
+    },
   });
-  const [isCreating, setIsCreating] = useState(false);
 
   // Función para recargar clientes
   const reloadClientes = useCallback(async () => {
@@ -106,47 +128,6 @@ export default function AdminPortal() {
   useEffect(() => {
     setClientesList(applyFilterAndSort(baseClientes, searchText, sortKey));
   }, [baseClientes, searchText, sortKey]);
-
-  const handleCreateCliente = async () => {
-    if (!newClienteForm.nombre.trim()) {
-      Alert.alert("Error", "El nombre del cliente es obligatorio");
-      return;
-    }
-
-    setIsCreating(true);
-    try {
-      const newCliente = await createCliente(
-        {
-          nombre: newClienteForm.nombre,
-          nifCif: newClienteForm.nifCif || undefined,
-          telefono: newClienteForm.telefono || undefined,
-          email: newClienteForm.email || undefined,
-          notas: newClienteForm.notas || undefined,
-          activo: true,
-        },
-        baseClientes,
-      );
-
-      // Recargar la lista de clientes
-      await reloadClientes();
-
-      setCreateModalVisible(false);
-      setNewClienteForm({
-        nombre: "",
-        nifCif: "",
-        telefono: "",
-        email: "",
-        notas: "",
-      });
-
-      Alert.alert("Éxito", "Cliente creado correctamente");
-    } catch (error) {
-      console.error("Error creando cliente:", error);
-      Alert.alert("Error", "No se pudo crear el cliente");
-    } finally {
-      setIsCreating(false);
-    }
-  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -357,64 +338,79 @@ export default function AdminPortal() {
                     <Text style={styles.label}>Nombre</Text>
                     <TextField
                       placeholder="Nombre del cliente"
-                      value={newClienteForm.nombre}
+                      value={form.values.nombre}
                       onChangeText={(text: string) =>
-                        setNewClienteForm((p) => ({ ...p, nombre: text }))
+                        form.setFieldValue('nombre', text)
                       }
                       style={{ width: "100%" }}
                     />
+                    {form.errors.nombre && (
+                      <Text style={styles.errorText}>{form.errors.nombre}</Text>
+                    )}
                   </View>
 
                   <View style={styles.fieldContainer}>
                     <Text style={styles.label}>NIF/CIF</Text>
                     <TextField
                       placeholder="NIF/CIF"
-                      value={newClienteForm.nifCif}
+                      value={form.values.nifCif}
                       onChangeText={(text: string) =>
-                        setNewClienteForm((p) => ({ ...p, nifCif: text }))
+                        form.setFieldValue('nifCif', text)
                       }
                       style={{ width: "100%" }}
                     />
+                    {form.errors.nifCif && (
+                      <Text style={styles.errorText}>{form.errors.nifCif}</Text>
+                    )}
                   </View>
 
                   <View style={styles.fieldContainer}>
                     <Text style={styles.label}>Teléfono</Text>
                     <TextField
                       placeholder="Teléfono"
-                      value={newClienteForm.telefono}
+                      value={form.values.telefono}
                       onChangeText={(text: string) =>
-                        setNewClienteForm((p) => ({ ...p, telefono: text }))
+                        form.setFieldValue('telefono', text)
                       }
                       keyboardType="phone-pad"
                       style={{ width: "100%" }}
                     />
+                    {form.errors.telefono && (
+                      <Text style={styles.errorText}>{form.errors.telefono}</Text>
+                    )}
                   </View>
 
                   <View style={styles.fieldContainer}>
                     <Text style={styles.label}>Email</Text>
                     <TextField
                       placeholder="Email"
-                      value={newClienteForm.email}
+                      value={form.values.email}
                       onChangeText={(text: string) =>
-                        setNewClienteForm((p) => ({ ...p, email: text }))
+                        form.setFieldValue('email', text)
                       }
                       keyboardType="email-address"
                       style={{ width: "100%" }}
                     />
+                    {form.errors.email && (
+                      <Text style={styles.errorText}>{form.errors.email}</Text>
+                    )}
                   </View>
 
                   <View style={styles.fieldContainer}>
                     <Text style={styles.label}>Notas</Text>
                     <TextField
                       placeholder="Notas adicionales"
-                      value={newClienteForm.notas}
+                      value={form.values.notas}
                       onChangeText={(text: string) =>
-                        setNewClienteForm((p) => ({ ...p, notas: text }))
+                        form.setFieldValue('notas', text)
                       }
                       multiline
                       numberOfLines={4}
                       style={{ width: "100%" }}
                     />
+                    {form.errors.notas && (
+                      <Text style={styles.errorText}>{form.errors.notas}</Text>
+                    )}
                   </View>
                 </View>
 
@@ -424,16 +420,16 @@ export default function AdminPortal() {
                       title="Cancelar"
                       variant="outline"
                       onPress={() => setCreateModalVisible(false)}
-                      disabled={isCreating}
+                      disabled={form.isSubmitting}
                     />
                   </View>
 
                   <View style={styles.actionBtn}>
                     <Button
-                      title={isCreating ? "Creando..." : "Crear"}
+                      title={form.isSubmitting ? "Creando..." : "Crear"}
                       variant="primary"
-                      onPress={handleCreateCliente}
-                      disabled={isCreating}
+                      onPress={form.handleSubmit}
+                      disabled={form.isSubmitting}
                     />
                   </View>
                 </View>

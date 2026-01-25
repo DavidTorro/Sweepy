@@ -23,9 +23,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string): boolean => {
-    // Login de usuario normal
-    if (email && password) {
-      setUser({ email, name: email.split("@")[0], role: "user" });
+    // Login de usuario normal de prueba
+    if (email === "David" && password === "1234") {
+      setUser({ email, name: "David", role: "user" });
+      return true;
+    }
+    // También aceptar email con @
+    if (email === "david@ejemplo.com" && password === "1234") {
+      setUser({ email, name: "David", role: "user" });
       return true;
     }
     return false;
