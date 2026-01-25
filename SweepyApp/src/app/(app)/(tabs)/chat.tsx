@@ -27,16 +27,7 @@ export default function ChatScreen() {
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Mensajes</Text>
-            <View style={styles.searchButton}>
-              <Ionicons name="search" size={20} color="#999" />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Buscar chats..."
-                placeholderTextColor="#999"
-                value={searchText}
-                onChangeText={setSearchText}
-              />
-            </View>
+            {/* Buscador removido */}
           </View>
 
           {/* Conversations */}

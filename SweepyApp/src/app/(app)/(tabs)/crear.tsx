@@ -52,7 +52,7 @@ export default function CrearScreen() {
         description: data.description,
         price: priceNumber,
         category: data.category,
-        condition: data.condition,
+        condition: data.condition as "Nuevo" | "Como nuevo" | "Buen estado" | "Aceptable",
         imagenes: photos,
         usuarioId: "1", // TODO: obtener del store de auth
       });

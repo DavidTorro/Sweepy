@@ -209,4 +209,9 @@ export const crearStyles = StyleSheet.create({
     fontWeight: "600",
     color: "#333",
   },
+  errorText: {
+    color: "#FF3B30",
+    fontSize: 12,
+    marginTop: 4,
+  },
 });
