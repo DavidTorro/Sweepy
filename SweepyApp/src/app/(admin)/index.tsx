@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,7 +26,6 @@ import ClienteCard from "../../components/ui/ClienteCard";
 import SegmentedControl from "../../components/ui/SegmentedControl";
 import SelectButton from "../../components/ui/SelectButton";
 import TextField from "../../components/ui/TextField";
-import { useAuth } from "../../providers/AuthProvider";
 import { ROUTES } from "../../utils/constants/constants";
 import { COLORS } from "../../utils/constants/theme";
 

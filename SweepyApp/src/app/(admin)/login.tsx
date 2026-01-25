@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
+import { useAuth } from "@/hooks/useAuth";
 import { adminLoginStyles } from "@/styles/pages/auth/adminLoginStyles";
 import { APP, ERRORS, ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
@@ -16,7 +17,6 @@ import {
     Text,
     View,
 } from "react-native";
-import { useAuth } from "../../providers/AuthProvider";
 
 export default function LoginScreen() {
   const { logout } = useAuth();

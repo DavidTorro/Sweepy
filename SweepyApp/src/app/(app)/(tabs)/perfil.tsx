@@ -1,5 +1,5 @@
 import RequireAuth from "@/components/auth/RequireAuth";
-import { useAuth } from "@/providers/AuthProvider";
+import { useAuth } from "@/hooks/useAuth";
 import { perfilStyles } from "@/styles/pages/app/perfilStyles";
 import { theme } from "@/utils/constants/theme";
 import { Ionicons } from "@expo/vector-icons";

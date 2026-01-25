@@ -1,4 +1,4 @@
-import { useAuth } from "@/providers/AuthProvider";
+import { useAuth } from "@/hooks/useAuth";
 import { requireAuthStyles } from "@/styles/components/RequireAuthStyles";
 import { ROUTES } from "@/utils/constants/constants";
 import { COLORS } from "@/utils/constants/theme";
