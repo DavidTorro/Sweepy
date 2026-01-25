@@ -1,10 +1,12 @@
-export type UserRole = "user" | "admin" | "cliente" | "admin";
+export type UserRole = "user" | "admin" | "cliente";
 
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
+  telefono?: string;
+  nifCif?: string;
   createdAt: string | Date;
   updatedAt: string | Date;
 }

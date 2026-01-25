@@ -1,5 +1,8 @@
 import { Cliente } from "@/types/clientes";
+import { mockAuthUsers } from "@/types/mocks/authMock";
 import { mockClientes } from "@/types/mocks/clientesMock";
+import { persistenceService } from "@/services/persistenceService";
+import { useAuthStore } from "@/stores/auth.store";
 import { create } from "zustand";
 
 interface ClientesStore {
@@ -48,13 +51,65 @@ export const useClientesStore = create<ClientesStore>((set, get) => ({
   },
 
   editarCliente: (id: string, updates: Partial<Cliente>) => {
-    set((state) => ({
-      clientes: state.clientes.map((cliente) =>
-        cliente.id === id
-          ? { ...cliente, ...updates, updatedAt: new Date().toISOString() }
-          : cliente,
-      ),
-    }));
+    const currentClientes = get().clientes;
+    const existing = currentClientes.find((c) => c.id === id);
+    if (!existing) return;
+
+    const updatedCliente: Cliente = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+
+    const updatedList = currentClientes.map((cliente) =>
+      cliente.id === id ? updatedCliente : cliente,
+    );
+
+    set({ clientes: updatedList });
+
+    // Sincronizar con usuario autenticado si coincide
+    const { user, setUser } = useAuthStore.getState();
+
+    const userMatches =
+      user && (user.id === updatedCliente.id || user.email === existing.email);
+
+    if (user && userMatches) {
+      const mergedUser = {
+        ...user,
+        name: updatedCliente.nombre ?? user.name,
+        email: updatedCliente.email ?? user.email,
+        telefono: updatedCliente.telefono ?? user.telefono,
+        nifCif: updatedCliente.nifCif ?? user.nifCif,
+        role: (updatedCliente.rol as any) || user.role,
+        updatedAt: new Date().toISOString(),
+      };
+      setUser(mergedUser);
+      persistenceService.saveUser(mergedUser).catch(() => {});
+    }
+
+    // Sincronizar mockAuthUsers para logins futuros
+    const oldEmailKey = existing.email ?? updatedCliente.email;
+    const mockEntry = oldEmailKey ? mockAuthUsers[oldEmailKey] : undefined;
+    if (mockEntry) {
+      const newEmail = updatedCliente.email ?? mockEntry.user.email;
+      mockAuthUsers[newEmail] = {
+        ...mockEntry,
+        user: {
+          ...mockEntry.user,
+          name: updatedCliente.nombre ?? mockEntry.user.name,
+          email: newEmail,
+          telefono: updatedCliente.telefono ?? mockEntry.user.telefono,
+          nifCif: updatedCliente.nifCif ?? mockEntry.user.nifCif,
+          role: (updatedCliente.rol as any) ?? mockEntry.user.role,
+          updatedAt: new Date().toISOString(),
+        },
+      };
+
+      // Si cambió el email, elimina la clave anterior
+      if (oldEmailKey && newEmail !== oldEmailKey) {
+        delete mockAuthUsers[oldEmailKey];
+      }
+    }
   },
 
   eliminarCliente: (id: string) => {

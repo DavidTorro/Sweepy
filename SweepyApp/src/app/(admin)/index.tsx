@@ -1,9 +1,9 @@
 import { useCreateClienteForm } from "@/hooks/useCreateClienteForm";
+import { clientesService } from "@/services/clientesService";
 import { useAuthStore } from "@/stores/auth.store";
 import { useClientesStore } from "@/stores/clientes.store";
 import { adminIndexStyles } from "@/styles/pages/admin/adminIndexStyles";
 import type { Cliente } from "@/types/clientes";
-import { clientesService } from "@/services/clientesService";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -186,14 +186,20 @@ export default function AdminPortal() {
                     label="Activos"
                     selected={filters.estado === "activos"}
                     onToggle={(v: boolean) =>
-                      setFilters((p) => ({ ...p, estado: v ? "activos" : undefined }))
+                      setFilters((p) => ({
+                        ...p,
+                        estado: v ? "activos" : undefined,
+                      }))
                     }
                   />
                   <SelectButton
                     label="Inactivos"
                     selected={filters.estado === "inactivos"}
                     onToggle={(v: boolean) =>
-                      setFilters((p) => ({ ...p, estado: v ? "inactivos" : undefined }))
+                      setFilters((p) => ({
+                        ...p,
+                        estado: v ? "inactivos" : undefined,
+                      }))
                     }
                   />
                 </View>
@@ -412,6 +418,7 @@ export default function AdminPortal() {
             </View>
           </KeyboardAvoidingView>
         </Modal>
+
       </KeyboardAvoidingView>
     </LinearGradient>
   );

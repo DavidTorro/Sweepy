@@ -230,4 +230,31 @@ export const adminDetailStyles = StyleSheet.create({
   actionBtn: {
     flex: 1,
   },
+  roleSelector: {
+    flexDirection: "row",
+    width: "100%",
+    gap: 8,
+  },
+  roleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  roleButtonActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  roleButtonText: {
+    fontFamily: FONTS.bold,
+    fontSize: 12,
+    color: "#666",
+  },
+  roleButtonTextActive: {
+    color: "white",
+  },
 });

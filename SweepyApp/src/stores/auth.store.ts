@@ -1,4 +1,6 @@
 import { authService } from "@/services/authService";
+import { persistenceService } from "@/services/persistenceService";
+import { useUserStore } from "@/stores/user.store";
 import { User } from "@/types/auth";
 import { mockAuthUsers } from "@/types/mocks/authMock";
 import { create } from "zustand";
@@ -34,6 +36,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
 
       set({ user: mockUser.user, isLoading: false });
+      useUserStore.getState().setUser(mockUser.user);
+      await persistenceService.saveUser(mockUser.user);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Error al iniciar sesión";
@@ -48,6 +52,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const newUser = await authService.register(email, name, password);
       set({ user: newUser, isLoading: false });
+      useUserStore.getState().setUser(newUser);
+      await persistenceService.saveUser(newUser);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Error al registrarse";
@@ -62,6 +68,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const user = await authService.loginAdmin(email, password);
       set({ user, isLoading: false });
+      useUserStore.getState().setUser(user);
+      await persistenceService.saveUser(user);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Error al iniciar sesión";
@@ -72,6 +80,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   logout: () => {
     set({ user: null, error: null });
+    useUserStore.getState().clearUser();
+    persistenceService.clearAll().catch(() => {});
   },
 
   setUser: (user: User | null) => {

@@ -46,6 +46,7 @@ export default function AdminPortal() {
     telefono: "",
     email: "",
     notas: "",
+    rol: "cliente" as "user" | "admin" | "cliente",
   });
   const [isCreating, setIsCreating] = useState(false);
 
@@ -129,6 +130,7 @@ export default function AdminPortal() {
         telefono: phoneNormalized || undefined,
         email: emailTrim,
         notas: newClienteForm.notas || undefined,
+        rol: newClienteForm.rol,
         activo: true,
       });
 
@@ -139,6 +141,7 @@ export default function AdminPortal() {
         telefono: "",
         email: "",
         notas: "",
+        rol: "cliente",
       });
 
       Alert.alert("Éxito", "Cliente creado correctamente");
@@ -382,6 +385,60 @@ export default function AdminPortal() {
                       keyboardType="email-address"
                       style={{ width: "100%" }}
                     />
+                  </View>
+
+                  <View style={styles.fieldContainer}>
+                    <Text style={styles.label}>Rol</Text>
+                    <View style={styles.roleSelector}>
+                      <TouchableOpacity
+                        style={[
+                          styles.roleButton,
+                          newClienteForm.rol === "cliente" && styles.roleButtonActive,
+                        ]}
+                        onPress={() => setNewClienteForm((p) => ({ ...p, rol: "cliente" }))}
+                      >
+                        <Text
+                          style={[
+                            styles.roleButtonText,
+                            newClienteForm.rol === "cliente" && styles.roleButtonTextActive,
+                          ]}
+                        >
+                          Cliente
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.roleButton,
+                          newClienteForm.rol === "admin" && styles.roleButtonActive,
+                        ]}
+                        onPress={() => setNewClienteForm((p) => ({ ...p, rol: "admin" }))}
+                      >
+                        <Text
+                          style={[
+                            styles.roleButtonText,
+                            newClienteForm.rol === "admin" && styles.roleButtonTextActive,
+                          ]}
+                        >
+                          Admin
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.roleButton,
+                          newClienteForm.rol === "user" && styles.roleButtonActive,
+                        ]}
+                        onPress={() => setNewClienteForm((p) => ({ ...p, rol: "user" }))}
+                      >
+                        <Text
+                          style={[
+                            styles.roleButtonText,
+                            newClienteForm.rol === "user" && styles.roleButtonTextActive,
+                          ]}
+                        >
+                          Usuario
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
 
                   <View style={styles.fieldContainer}>

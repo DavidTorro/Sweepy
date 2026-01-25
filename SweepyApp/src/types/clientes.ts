@@ -5,6 +5,7 @@ export interface Cliente {
   telefono?: string;
   nifCif?: string;
   notas?: string;
+  rol?: "user" | "admin" | "cliente";
   activo: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;

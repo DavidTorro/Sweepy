@@ -1,6 +1,7 @@
 import { authService } from "@/services/authService";
 import { persistenceService } from "@/services/persistenceService";
 import { useAuthStore } from "@/stores/auth.store";
+import { useUserStore } from "@/stores/user.store";
 import type { User } from "@/types/auth";
 import React, { createContext, useEffect, useState } from "react";
 
@@ -21,6 +22,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const { user: storeUser, setUser: setStoreUser } = useAuthStore();
+  const { setUser: setUserStore, clearUser: clearUserStore } = useUserStore();
 
   // Restaurar usuario al iniciar
   useEffect(() => {
@@ -31,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const isValid = await authService.validateUser(savedUser);
           if (isValid) {
             setStoreUser(savedUser);
+            setUserStore(savedUser);
           } else {
             await persistenceService.clearAll();
           }
@@ -43,12 +46,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     restoreUser();
-  }, [setStoreUser]);
+  }, [setStoreUser, setUserStore]);
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
       const user = await authService.login(email, password);
       setStoreUser(user);
+      setUserStore(user);
       await persistenceService.saveUser(user);
     } catch (error) {
       throw error;
@@ -59,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const user = await authService.loginAdmin(email, password);
       setStoreUser(user);
+      setUserStore(user);
       await persistenceService.saveUser(user);
     } catch (error) {
       throw error;
@@ -68,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async (): Promise<void> => {
     try {
       setStoreUser(null);
+      clearUserStore();
       await persistenceService.clearAll();
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
@@ -80,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user: storeUser,
         isAuthenticated: !!storeUser,
-        isAdmin: storeUser?.role === "admin" || storeUser?.role === "cliente",
+        isAdmin: storeUser?.role === "admin",
         isLoading,
         login,
         loginAdmin,

@@ -48,6 +48,7 @@ export default function ClienteDetailScreen() {
     telefono: "",
     email: "",
     notas: "",
+    rol: "cliente" as "user" | "admin" | "cliente",
     activo: true,
   });
 
@@ -68,6 +69,7 @@ export default function ClienteDetailScreen() {
         telefono: found.telefono ?? "",
         email: found.email ?? "",
         notas: found.notas ?? "",
+        rol: (found.rol || "cliente") as "user" | "admin" | "cliente",
         activo: found.activo,
       });
     }
@@ -116,6 +118,7 @@ export default function ClienteDetailScreen() {
         telefono: phoneNormalized || undefined,
         email: emailTrim,
         notas: formData.notas || undefined,
+        rol: formData.rol,
         activo: formData.activo,
       });
 
@@ -256,6 +259,15 @@ export default function ClienteDetailScreen() {
               </View>
             )}
 
+            {cliente.rol && (
+              <View style={styles.infoSection}>
+                <Text style={styles.infoLabel}>Rol</Text>
+                <Text style={styles.infoValue}>
+                  {cliente.rol === "admin" ? "Admin" : cliente.rol === "cliente" ? "Cliente" : "Usuario"}
+                </Text>
+              </View>
+            )}
+
             {cliente.notas && (
               <View style={styles.infoSection}>
                 <Text style={styles.infoLabel}>Notas</Text>
@@ -390,6 +402,60 @@ export default function ClienteDetailScreen() {
                     keyboardType="email-address"
                     style={{ width: "100%" }}
                   />
+                </View>
+
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.label}>Rol</Text>
+                  <View style={styles.roleSelector}>
+                    <TouchableOpacity
+                      style={[
+                        styles.roleButton,
+                        formData.rol === "cliente" && styles.roleButtonActive,
+                      ]}
+                      onPress={() => setFormData((p) => ({ ...p, rol: "cliente" }))}
+                    >
+                      <Text
+                        style={[
+                          styles.roleButtonText,
+                          formData.rol === "cliente" && styles.roleButtonTextActive,
+                        ]}
+                      >
+                        Cliente
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.roleButton,
+                        formData.rol === "admin" && styles.roleButtonActive,
+                      ]}
+                      onPress={() => setFormData((p) => ({ ...p, rol: "admin" }))}
+                    >
+                      <Text
+                        style={[
+                          styles.roleButtonText,
+                          formData.rol === "admin" && styles.roleButtonTextActive,
+                        ]}
+                      >
+                        Admin
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.roleButton,
+                        formData.rol === "user" && styles.roleButtonActive,
+                      ]}
+                      onPress={() => setFormData((p) => ({ ...p, rol: "user" }))}
+                    >
+                      <Text
+                        style={[
+                          styles.roleButtonText,
+                          formData.rol === "user" && styles.roleButtonTextActive,
+                        ]}
+                      >
+                        Usuario
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
                 <View style={styles.fieldContainer}>
